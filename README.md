@@ -1,5 +1,8 @@
 # The Ark - (Chess Engine)
 
+## Board Representation
+[ChessBoardRepresentation]("Resources\ChessBoardRep.jpg")
+
 - ## Progress :
     - [X] Board Representation
     - [X] FEN Parser
