@@ -1,10 +1,10 @@
 # The Ark - (Chess Engine)
-Author           : [MrRhuezzler aka Rhubanraj](https://github.com/MrRhuezzler)
-Project Language : C
-Project Year     : 2020
-Status           : :triangular_flag_on_post: (Under Development)
+Author           : [MrRhuezzler aka Rhubanraj](https://github.com/MrRhuezzler)  
+Project Language : C  
+Project Year     : 2020  
+Status           : :triangular_flag_on_post: (Under Development)  
 
-This is a minimal chess engine.
+This is a minimal chess engine.  
 
 ## Board Representation
 ![ChessBoardRepresentation](/Resources/ChessBoardRep.jpg)
