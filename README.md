@@ -1,7 +1,7 @@
 # The Ark - (Chess Engine)
 
 ## Board Representation
-[ChessBoardRepresentation]("Resources\ChessBoardRep.jpg")
+![ChessBoardRepresentation](/Resources/ChessBoardRep.jpg)
 
 - ## Progress :
     - [X] Board Representation
