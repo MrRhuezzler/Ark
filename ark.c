@@ -8,18 +8,6 @@
 
 #define C_FEN "5p1q/8/5p1p/8/8/P1P5/8/Q1P5 w - - 0 1"
 
-
-void SqAt(const int side, const S_BOARD *board){
-    for(int rank = RANK_8; rank >= RANK_1; rank--){
-        for(int file = FILE_A; file <= FILE_H; file++){
-            int sq = FR2SQ(file, rank);
-            printf("%5c", isSqAttacked(sq, side, board) ? 'X' : '.');
-        }
-        printf("\n\n");
-    }
-    printf("\n\n");
-}
-
 int main(){
 
     Init();
@@ -29,9 +17,19 @@ int main(){
     parseFen(C_FEN, &board);
     printBoard(&board);
 
-    SqAt(WHITE, &board);
-    SqAt(BLACK, &board);
 
+    int move = 0;
+    int from = A2, to = H7;
+    int cap = wR, pro = bB;
+    move = from | (to << 7) | (cap << 14) | (pro << 20);
+    printf("%d %X\n", move, move);
+
+    printf("From Sq : %s\n", PrSq(from));
+    printf("To Sq : %s\n", PrSq(to));
+    printf("Move : %s", PrMove(move));
+
+
+    // printf("FROM : %d TO : %d CAP : %d PRO : %d", FROSQ(move), TOSQ(move), CAPTURED(move), PROMOTION(move));
 
     return 0;
 }

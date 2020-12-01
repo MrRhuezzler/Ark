@@ -53,6 +53,20 @@ exit(1);}
                     (U64)rand() << 60   )
 
 
+// Move preprocessors
+#define FROSQ(move) (move & 0x7F)
+#define TOSQ(move) ((move >> 7)  & 0x7F)
+#define CAPTURED(move) ((move >> 14) & 0xF)
+#define PROMOTION(move) ((move >> 20)& 0xF)
+
+// Flags
+#define MFLAGEP 0x40000
+#define MFLAGPS 0x80000
+#define MFLAGCA 0x1000000
+
+#define MFLAGCAP 0x7C000
+#define MFLAGPRO 0xF00000
+
 /* --------------- GLOBALS --------------- */
 
 // Mapping from 120grid to 64 grid
@@ -116,4 +130,8 @@ extern int CheckBoard(const S_BOARD *board);
 // attack.c
 extern int isSqAttacked(const int sq, const int side, const S_BOARD *board);
 
+// io.c
+extern void SqAt(const int side, const S_BOARD *board);
+extern char * PrSq(const int sq);
+extern char * PrMove(const int move);
 #endif

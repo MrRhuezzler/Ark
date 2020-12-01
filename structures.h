@@ -3,6 +3,36 @@
 
 #include "constants.h"
 
+typedef struct
+{
+    int move;
+    int score;
+
+} S_MOVE;
+
+/* GAME MOVE 
+
+20 < FROM, TO < 99 => Approx 7 bits are needed
+
+0000 0000 0000 0000 0000 0111 1111 => FROM (0x7F)
+0000 0000 0000 0011 1111 1000 0000 => TO (0x7F << 7)
+0000 0000 0011 1100 0000 0000 0000 => Captured Piece (F << 14)
+0000 0000 0100 0000 0000 0000 0000 => EnPass (0x40000)
+0000 0000 1000 0000 0000 0000 0000 => PawnStart (0x80000)
+0000 1111 0000 0000 0000 0000 0000 => Promoted Piece (F << 20)
+0001 0000 0000 0000 0000 0000 0000 => IsCastle (0x1000000)
+
+GAME MOVE */
+
+typedef struct
+{
+
+    S_MOVE moves[MAX_POSTION_MOVES];
+    int count;
+
+} S_MOVELIST;
+
+
 // UNDO Representation
 typedef struct 
 {

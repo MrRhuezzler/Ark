@@ -14,7 +14,9 @@ This is a minimal chess engine.
     - [X] FEN Parser
     - [X] Postion Setup
     - [X] Attacked Square
-    - [ ] Move Structure
+    - [X] Move Structure
+    - [ ] Move Generator :triangular_flag_on_post: (Current)
+    - [ ] Make Move
     - [ ] Do / Undo Moves
     - [ ] Perf Testing ( Milestone )
     - [ ] Skeleton Evaluation

@@ -279,7 +279,7 @@ int parseFen(const char *fen, S_BOARD *board){
     board->posKey = generatePosKey(board);
 
     UpdateListsMaterial(board);
-    CheckBoard(board);
+    ASSERT(CheckBoard(board));
     
     /*
     for(int i = 0;index < strlen(fen); index++){

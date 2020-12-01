@@ -9,6 +9,7 @@ enum {FALSE, TRUE};
 
 #define BRD_SQ_NUM 120
 #define MAX_GAME_MOVES 2048
+#define MAX_POSTION_MOVES 256
 
 // Constants for PIECE
 enum {EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK};
