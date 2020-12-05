@@ -15,8 +15,8 @@ This is a minimal chess engine.
     - [X] Postion Setup
     - [X] Attacked Square
     - [X] Move Structure
-    - [ ] Move Generator :triangular_flag_on_post: (Current)
-    - [ ] Make Move
+    - [X] Move Generator
+    - [ ] Make Move :triangular_flag_on_post: (Current)
     - [ ] Do / Undo Moves
     - [ ] Perf Testing ( Milestone )
     - [ ] Skeleton Evaluation

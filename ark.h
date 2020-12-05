@@ -67,6 +67,10 @@ exit(1);}
 #define MFLAGCAP 0x7C000
 #define MFLAGPRO 0xF00000
 
+// Move Generators
+#define MOVE(f, t, ca, pro, fl) (f | (t << 7) | (ca << 14) | (pro << 20) | (fl))
+#define SQOFFBOARD(sq) (FilesBrd[sq] == OFF_BOARD)
+
 /* --------------- GLOBALS --------------- */
 
 // Mapping from 120grid to 64 grid
@@ -134,4 +138,15 @@ extern int isSqAttacked(const int sq, const int side, const S_BOARD *board);
 extern void SqAt(const int side, const S_BOARD *board);
 extern char * PrSq(const int sq);
 extern char * PrMove(const int move);
+void PrintMoveList(const S_MOVELIST *list);
+
+// validate.c
+extern int SqOnBoard(const int sq);
+extern int SideValid(const int side);
+extern int FileRankValid(const int fr);
+extern int PieceValidEmpty(const int pce);
+extern int PieceValid(const int pce);
+
+// movegen.c
+void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list);
 #endif

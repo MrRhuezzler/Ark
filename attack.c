@@ -7,6 +7,9 @@ const int KiDir[] = {-9, -11, 11, 9, -1, -10, 1, 10};
 
 int isSqAttacked(const int sq, const int side, const S_BOARD *board){
 
+    ASSERT(SqOnBoard(sq));
+    ASSERT(SideValid(side));
+    ASSERT(CheckBoard(board));
 
     // Pawns
     if(side == WHITE){
