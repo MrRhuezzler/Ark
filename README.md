@@ -9,7 +9,7 @@ This is a minimal chess engine.
 ## Board Representation
 ![ChessBoardRepresentation](/Resources/ChessBoardRep.jpg)
 
-## Progress :
+- ## Progress :
     - [X] Board Representation
     - [X] FEN Parser
     - [X] Postion Setup
