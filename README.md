@@ -1,5 +1,5 @@
 # The Ark - (Chess Engine)
-Author           : [MrRhuezzler aka Rhubanraj](https://github.com/MrRhuezzler)  
+Author           : [Rhubanraj aka MrRhuezzler](https://github.com/MrRhuezzler)  
 Project Language : C  
 Project Year     : 2020  
 Status           : :triangular_flag_on_post: (Under Development)  
