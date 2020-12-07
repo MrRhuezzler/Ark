@@ -9,13 +9,13 @@ Generate Moves(board, list)
 
 */
 
-int sliderPieces[] = {wB, wR, wQ, 0, bB, bR, bQ, 0};
-int jumpingPieces[] = {wN, wK, 0, bN, bK, 0};
+const int sliderPieces[] = {wB, wR, wQ, 0, bB, bR, bQ, 0};
+const int jumpingPieces[] = {wN, wK, 0, bN, bK, 0};
 
-int sliderPiecesIndex[] = {0, 4};
-int jumpingPiecesIndex[] = {0, 3};
+const int sliderPiecesIndex[] = {0, 4};
+const int jumpingPiecesIndex[] = {0, 3};
 
-int piecesDir[13][8] = {
+const int piecesDir[13][8] = {
     {0},
     {0},
     {+8, +12, +19, +21, -8, -12, -19, -21},
@@ -31,31 +31,31 @@ int piecesDir[13][8] = {
     {-9, -11, 11, 9, -1, -10, 1, 10},
 };
 
-int numDir[13] = {0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8};
+const int numDir[13] = {0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8};
 
 // Adding a normal move
-void addQuietMove(const S_BOARD *board, int move, S_MOVELIST *list){
+static void addQuietMove(const S_BOARD *board, int move, S_MOVELIST *list){
     list->moves[list->count].move = move;
     list->moves[list->count].score = 0;
     list->count++;
 }
 
 // Adding a Capture move
-void addCaptureMove(const S_BOARD *board, int move, S_MOVELIST *list){
+static void addCaptureMove(const S_BOARD *board, int move, S_MOVELIST *list){
     list->moves[list->count].move = move;
     list->moves[list->count].score = 0;
     list->count++;
 }
 
 // Adding a EnPass move
-void addEnPassMove(const S_BOARD *board, int move, S_MOVELIST *list){
+static void addEnPassMove(const S_BOARD *board, int move, S_MOVELIST *list){
     list->moves[list->count].move = move;
     list->moves[list->count].score = 0;
     list->count++;
 }
 
 // Adds the white pawn's possible captures moves 
-void addWhitePawnCaptureMoves(const S_BOARD *board, const int from, const int to, const int cap, S_MOVELIST *list){
+static void addWhitePawnCaptureMoves(const S_BOARD *board, const int from, const int to, const int cap, S_MOVELIST *list){
 
     ASSERT(PieceValidEmpty(cap));
     ASSERT(SqOnBoard(from));
@@ -72,7 +72,7 @@ void addWhitePawnCaptureMoves(const S_BOARD *board, const int from, const int to
 }
 
 // Adds the white pawn's possible quiet moves 
-void addWhitePawnQuietMoves(const S_BOARD *board, const int from, const int to, S_MOVELIST *list){
+static void addWhitePawnQuietMoves(const S_BOARD *board, const int from, const int to, S_MOVELIST *list){
 
     ASSERT(SqOnBoard(from));
     ASSERT(SqOnBoard(to));
@@ -90,7 +90,7 @@ void addWhitePawnQuietMoves(const S_BOARD *board, const int from, const int to, 
 
 
 // Adds the black pawn's possible captures moves 
-void addBlackPawnCaptureMoves(const S_BOARD *board, const int from, const int to, const int cap, S_MOVELIST *list){
+static void addBlackPawnCaptureMoves(const S_BOARD *board, const int from, const int to, const int cap, S_MOVELIST *list){
 
     ASSERT(PieceValidEmpty(cap));
     ASSERT(SqOnBoard(from));
@@ -107,7 +107,7 @@ void addBlackPawnCaptureMoves(const S_BOARD *board, const int from, const int to
 }
 
 // Adds the black pawn's possible quiet moves 
-void addBlackPawnQuietMoves(const S_BOARD *board, const int from, const int to, S_MOVELIST *list){
+static void addBlackPawnQuietMoves(const S_BOARD *board, const int from, const int to, S_MOVELIST *list){
 
     ASSERT(SqOnBoard(from));
     ASSERT(SqOnBoard(to));

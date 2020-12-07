@@ -30,10 +30,13 @@ exit(1);}
 
 // Macro to get from FILE, RANK to SQUARE INDEX
 #define FR2SQ(f, r) (A1 + f) + (r * 10)
+
 // Macro for popBit
 #define POP(bb) popBit(bb)
+
 // Macro for countBit
 #define CNT(bb) countBit(bb)
+
 // Macros for set and clear bit
 #define CLRBIT(bb, b) (bb &= ClearMask[b])
 #define SETBIT(bb, b) (bb |= SetMask[b])
@@ -70,6 +73,12 @@ exit(1);}
 // Move Generators
 #define MOVE(f, t, ca, pro, fl) (f | (t << 7) | (ca << 14) | (pro << 20) | (fl))
 #define SQOFFBOARD(sq) (FilesBrd[sq] == OFF_BOARD)
+
+// MakeMove
+#define HASHPCE(pce, sq) (board->posKey ^= pieceKey[pce][sq])
+#define HASHCA (board->posKey ^= castlePemKey[board->castlePerm])
+#define HASHSIDE (board->posKey ^= (sideKey))
+#define HASHEP (board->posKey ^= pieceKey[EMPTY][board->enPass])
 
 /* --------------- GLOBALS --------------- */
 
@@ -110,6 +119,7 @@ extern int IsKnight[13];
 extern int IsBishopQueen[13];
 extern int IsRookQueen[13];
 extern int IsKing[13];
+extern int IsPawn[13];
 
 /* --------------- FUNCTIONS --------------- */
 
