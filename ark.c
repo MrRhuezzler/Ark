@@ -14,7 +14,7 @@ int main(){
 
     S_BOARD board[1];
 
-    parseFen(MOVEGEN_TEST_FEN, board);
+    parseFen(START_FEN, board);
     printBoard(board);
 
     S_MOVELIST list[1];
@@ -23,18 +23,29 @@ int main(){
 
     PrintMoveList(list);
 
-    // int move = 0;
-    // int from = A2, to = H7;
-    // int cap = wR, pro = bB;
-    // move = from | (to << 7) | (cap << 14) | (pro << 20);
-    // printf("%d %X\n", move, move);
+    getchar();
 
-    // printf("From Sq : %s\n", PrSq(from));
-    // printf("To Sq : %s\n", PrSq(to));
-    // printf("Move : %s", PrMove(move));
+    int move;
 
+    for(int i = 0 ; i < list->count; i++){
+        move = list->moves[i].move;
 
-    // printf("FROM : %d TO : %d CAP : %d PRO : %d", FROSQ(move), TOSQ(move), CAPTURED(move), PROMOTION(move));
+        if(!MakeMove(board, move)){
+            continue;
+        }
+
+        printf("MOVE : %s\n", PrMove(move));
+        printBoard(board);
+
+        TakeMove(board);
+
+        printf("TAKEN : %s\n", PrMove(move));
+        printBoard(board);
+
+        getchar();
+
+    }
+
 
     return 0;
 }

@@ -22,7 +22,7 @@
 #define ASSERT(n) \
 if(!(n)){ \
 printf("%s - Failed ", #n);\
-printf("In File %s", __FILE__);\
+printf("In File %s ", __FILE__);\
 printf("At Line %d\n", __LINE__);\
 exit(1);}
 #endif
@@ -159,4 +159,8 @@ extern int PieceValid(const int pce);
 
 // movegen.c
 void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list);
+
+// makemove.c
+int MakeMove(S_BOARD *board, const int move);
+void TakeMove(S_BOARD *board);
 #endif

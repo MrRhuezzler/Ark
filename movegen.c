@@ -132,8 +132,9 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
     ASSERT(CheckBoard(board));
 
     list->count = 0;
+    int side = board->side;
 
-    if(board->side == WHITE){
+    if(side == WHITE){
         // White to Play
 
         // Pawn
@@ -146,7 +147,7 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
                 addWhitePawnQuietMoves(board, sq, sq + 10, list);
                 // Two Step forward when RANK == 2
                 if(RanksBrd[sq] == RANK_2 && board->pieces[sq + 20] == EMPTY){
-                    addQuietMove(board, MOVE(sq, sq + 20, EMPTY, EMPTY, MFLAGEP), list);
+                    addQuietMove(board, MOVE(sq, sq + 20, EMPTY, EMPTY, MFLAGPS), list);
                 }
             }
 
@@ -196,20 +197,20 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
             ASSERT(SqOnBoard(sq));
             // One Step forward
             if(board->pieces[sq - 10] == EMPTY){
-                addWhitePawnQuietMoves(board, sq, sq - 10, list);
-                // Two Step forward when RANK == 2
+                addBlackPawnQuietMoves(board, sq, sq - 10, list);
+                // Two Step forward when RANK == 7
                 if(RanksBrd[sq] == RANK_7 && board->pieces[sq - 20] == EMPTY){
-                    addQuietMove(board, MOVE(sq, sq - 20, EMPTY, EMPTY, MFLAGEP), list);
+                    addQuietMove(board, MOVE(sq, sq - 20, EMPTY, EMPTY, MFLAGPS), list);
                 }
             }
 
             // Capture
-            if(!SQOFFBOARD(sq - 9) && PieceCol[board->pieces[sq - 9]] == BLACK){
-                addWhitePawnCaptureMoves(board, sq, sq - 9, board->pieces[sq - 9], list);
+            if(!SQOFFBOARD(sq - 9) && PieceCol[board->pieces[sq - 9]] == WHITE){
+                addBlackPawnCaptureMoves(board, sq, sq - 9, board->pieces[sq - 9], list);
             }
 
-            if(!SQOFFBOARD(sq - 11) && PieceCol[board->pieces[sq - 11]] == BLACK){
-                addWhitePawnCaptureMoves(board, sq, sq - 11, board->pieces[sq - 11], list);
+            if(!SQOFFBOARD(sq - 11) && PieceCol[board->pieces[sq - 11]] == WHITE){
+                addBlackPawnCaptureMoves(board, sq, sq - 11, board->pieces[sq - 11], list);
             }
 
 
@@ -283,8 +284,10 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
 
     i = jumpingPiecesIndex[board->side];
     piece = jumpingPieces[i++];
-    
+
     while(piece){
+
+        ASSERT(PieceValid(piece));
 
         for(int j = 0; j < board->pceNum[piece]; j++){
 

@@ -205,7 +205,7 @@ int MakeMove(S_BOARD *board, int move){
 
     board->castlePerm &= CastlePerm[from];
     board->castlePerm &= CastlePerm[to];
-    board->enPass;
+    board->enPass = NO_SQ;
 
     HASHCA;
 
@@ -223,7 +223,7 @@ int MakeMove(S_BOARD *board, int move){
 
     if(IsPawn[board->pieces[from]]){
         board->fiftyMoves = 0;
-        if(move & MFLAGEP){
+        if(move & MFLAGPS){
             if(side == WHITE){
                 board->enPass = from + 10;
                 ASSERT(RanksBrd[board->enPass] == RANK_3);
@@ -255,7 +255,7 @@ int MakeMove(S_BOARD *board, int move){
 
     ASSERT(CheckBoard(board));
     
-    if(isSqAttacked(board->kingSq[board->side], board->side, board)){
+    if(isSqAttacked(board->kingSq[side], board->side, board)){
         TakeMove(board);
         return FALSE;
     }
@@ -284,7 +284,7 @@ void TakeMove(S_BOARD *board){
 
     board->castlePerm = board->history[board->hisply].castlePerm;
     board->fiftyMoves = board->history[board->hisply].fiftyMoves;
-    board->enPass = board->history[board->hisply].castlePerm;
+    board->enPass = board->history[board->hisply].enPass;
 
     if(board->enPass != NO_SQ) HASHEP;
     HASHCA;
@@ -328,7 +328,7 @@ void TakeMove(S_BOARD *board){
     int cap = CAPTURED(move);
     if(cap != EMPTY){
         ASSERT(PieceValid(cap));
-        AddPiece(to, from, cap);
+        AddPiece(to, board, cap);
     }
 
     int prPiece = PROMOTION(move);

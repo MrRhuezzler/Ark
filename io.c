@@ -36,7 +36,7 @@ char * PrMove(const int move){
         else if(IsBQ(promotedPiece) && !IsRQ(promotedPiece)) promotedPieceChar = 'b';
         sprintf(MvStr, "%c%c%c%c%c", 'a' + from_f, '1' + from_r, 'a' + to_f, '1' + to_r, promotedPieceChar);
     }else sprintf(MvStr, "%c%c%c%c", 'a' + from_f, '1' + from_r, 'a' + to_f, '1' + to_r);
-    
+
     return MvStr;
 }
 
@@ -48,4 +48,4 @@ void PrintMoveList(const S_MOVELIST *list){
         printf("%d) Move : %s, Score : %d\n", i + 1, PrMove(list->moves[i].move), list->moves[i].score);
     }
     printf("Total Number of Moves : %d\n", list->count);
-}   
+}

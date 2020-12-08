@@ -141,10 +141,7 @@ int CheckBoard(const S_BOARD *board){
     ASSERT(board->side == WHITE || board->side == BLACK);
     ASSERT(generatePosKey(board) == board->posKey);
 
-    ASSERT(board->enPass == NO_SQ ||
-        (RanksBrd[board->enPass] == RANK_6 && board->side == WHITE) ||
-        (RanksBrd[board->enPass] == RANK_3 && board->side == BLACK)
-    );
+    ASSERT(board->enPass == NO_SQ ||(RanksBrd[board->enPass] == RANK_6 && board->side == WHITE) || (RanksBrd[board->enPass] == RANK_3 && board->side == BLACK));
 
 
     ASSERT(board->pieces[board->kingSq[WHITE]] == wK || board->pieces[board->kingSq[WHITE]] == OFF_BOARD);
