@@ -67,6 +67,7 @@
     - Save to History
     - Update Castle Perm using CastlePerm array
     - Hashing in Castle Perms
+    - Increase hisply and ply
     - If Capture, Clear Piece from to_sq, reset the fifty move counter
     - If it is a pawn
         - If it is a PawnStart
@@ -81,3 +82,16 @@
     - Check whether king is under attack by making this move.
         - If so return 0, take back the move
         - else return 1
+
+- #### TakeMove
+    - ##### Args
+        - S_BOARD *board
+    - Decrease hisply and ply
+    - Hashing out Enpass and Castle perms
+    - Retrieving the castleperm, fiftymoves, enpass from the last element of the history array.
+    - Hashing in Castle Perms and Enpass
+    - If Enpass then Add Piece to to_sq - 10 for WHITE and to_sq + 10 BLACK
+    - else if Castle Move back the rooks
+    - Move the piece from to_sq to from_sq
+    - Take Back king_sq
+    - Clearing Promoted Piece
