@@ -1,0 +1,83 @@
+- #### Clear Piece
+    - ##### Args
+        - const int square
+        - S_BOARD *board
+
+    - Hashout the pieces from the poskey
+    - Setting the square to EMPTY
+    - Decrease the material value
+    - If, it is a Big Piece
+        - Decrement Big Piece
+        - Decrement Minor or Major Piece
+    - else, Clear the pawn bitset
+    - Remove it from pList
+        - pList[pce][0] = E1
+        - pList[pce][1] = D1
+        - pList[pce][2] = C1
+    - After removing
+        - pList[pce][0] = E1
+        - pList[pce][1] = C1
+
+
+- #### Add Piece
+    - ##### Args
+        - const int square
+        - S_BOARD *board
+        - const int Piece
+    
+    - Setting the square to Piece
+    - If, it is a Big Piece
+        - Increment Big Piece
+        - Increment Major or Minor Piece
+    - else, Set the pawn bitset
+    - Add it to the pList as the last element
+    - Increase the Material Value
+
+- #### Move Piece
+    - ##### Args
+        - const int from
+        - const int to
+        - S_BOARD *board
+    - Hashing out the piece from from_sq
+    - Setting the from_sq to EMPTY
+    - Hashing in the piece from to_sq
+    - Setting the to_sq to Piece
+    - If not a big piece
+        - Clear pawn bitset (from_sq)
+        - Set pawn bitset (to_sq)
+    - Update the pList by setting the particular element from from_sq to to_sq
+
+- #### MakeMove
+    - ##### Args
+        - int move
+        - S_BOARD *board
+    - get the from and the to sqaure from move
+    - If it is a EnPassent Move
+        - Clear Piece from the to - 10 for WHITE and to + 10 for BLACK
+    - If it is a Castle Move
+        - to can only be C1, G1, C8, G8
+            - C#
+                - MovePiece(A#, D#)
+            - G#
+                - MovePiece(H#, F#)
+    
+    - MovePiece(from, to)
+    - Hashing out the Enpass (if Enpass)
+    - Hashing out castle perms
+    - Save to History
+    - Update Castle Perm using CastlePerm array
+    - Hashing in Castle Perms
+    - If Capture, Clear Piece from to_sq, reset the fifty move counter
+    - If it is a pawn
+        - If it is a PawnStart
+            - Set Enpass square
+            - Hash in the Enpass Key
+    
+    - Move(from, to)
+    - If promotion and then piece at to_sq is a Pawn
+        - Clear pawn and Add the promotion piece
+    - If the king is moved update the KingSq
+    - Switch Sides
+    - Check whether king is under attack by making this move.
+        - If so return 0, take back the move
+        - else return 1
