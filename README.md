@@ -17,9 +17,9 @@ This is a minimalistic Chess Engine.
     - [X] Move Structure
     - [X] Move Generator
     - [X] Make Move
-    - [ ] Perf Testing ( Milestone ) :triangular_flag_on_post: (Current)
-    - [ ] Do / Undo Moves
-    - [ ] Skeleton Evaluation
+    - [X] Perf Testing
+    - [X] Do / Undo Moves
+    - [ ] Skeleton Evaluation ( Milestone ) :triangular_flag_on_post: (Current)
     - [ ] Search Algorithm
     - [ ] GUI Connection
     
