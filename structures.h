@@ -81,7 +81,7 @@ typedef struct
 
     // Total Amount of pieces
 
-    // Amount of eact piece in the board 
+    // Amount of each piece in the board 
     int pceNum[13];
     // Amount of big pieces in the board (all execpt pawns)
     int bigPce[2];

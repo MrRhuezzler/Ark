@@ -160,13 +160,14 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
                 addWhitePawnCaptureMoves(board, sq, sq + 11, board->pieces[sq + 11], list);
             }
 
+            if(board->enPass != NO_SQ){
+                if((sq + 9) == board->enPass){
+                    addEnPassMove(board, MOVE(sq, sq + 9, EMPTY, EMPTY, MFLAGEP), list);
+                }
 
-            if((sq + 9) == board->enPass){
-                addCaptureMove(board, MOVE(sq, sq + 9, EMPTY, EMPTY, MFLAGEP), list);
-            }
-
-            if((sq + 11) == board->enPass){
-                addCaptureMove(board, MOVE(sq, sq + 11, EMPTY, EMPTY, MFLAGEP), list);
+                if((sq + 11) == board->enPass){
+                    addEnPassMove(board, MOVE(sq, sq + 11, EMPTY, EMPTY, MFLAGEP), list);
+                }
             }
         }
 
@@ -213,13 +214,14 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
                 addBlackPawnCaptureMoves(board, sq, sq - 11, board->pieces[sq - 11], list);
             }
 
+            if(board->enPass != NO_SQ){
+                if((sq - 9) == board->enPass){
+                    addEnPassMove(board, MOVE(sq, sq - 9, EMPTY, EMPTY, MFLAGEP), list);
+                }
 
-            if((sq - 9) == board->enPass){
-                addCaptureMove(board, MOVE(sq, sq - 9, EMPTY, EMPTY, MFLAGEP), list);
-            }
-
-            if((sq - 11) == board->enPass){
-                addCaptureMove(board, MOVE(sq, sq - 11, EMPTY, EMPTY, MFLAGEP), list);
+                if((sq - 11) == board->enPass){
+                    addEnPassMove(board, MOVE(sq, sq - 11, EMPTY, EMPTY, MFLAGEP), list);
+                }
             }
         }
 

@@ -14,7 +14,7 @@
 
 /* --------------- MACROS --------------- */
 
-#define DEBUG // Remove this during Release
+// #define DEBUG // Remove this during Release
 // Assert Function for checking conditions
 #ifndef DEBUG
 #define ASSERT(n)
@@ -129,7 +129,7 @@ extern void Init();
 // bitboard.c
 extern void printBitBoard(U64 bb);
 extern int popBit(U64 *bb);
-int countBit(U64 bb);
+extern int countBit(U64 bb);
 
 // haskey.c
 extern U64 generatePosKey(const S_BOARD *board);
@@ -148,7 +148,7 @@ extern int isSqAttacked(const int sq, const int side, const S_BOARD *board);
 extern void SqAt(const int side, const S_BOARD *board);
 extern char * PrSq(const int sq);
 extern char * PrMove(const int move);
-void PrintMoveList(const S_MOVELIST *list);
+extern void PrintMoveList(const S_MOVELIST *list);
 
 // validate.c
 extern int SqOnBoard(const int sq);
@@ -158,9 +158,14 @@ extern int PieceValidEmpty(const int pce);
 extern int PieceValid(const int pce);
 
 // movegen.c
-void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list);
+extern void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list);
 
 // makemove.c
-int MakeMove(S_BOARD *board, const int move);
-void TakeMove(S_BOARD *board);
+extern int MakeMove(S_BOARD *board, const int move);
+extern void TakeMove(S_BOARD *board);
+
+
+// perft.c
+extern void perftTest(int depth, S_BOARD *board);
+
 #endif

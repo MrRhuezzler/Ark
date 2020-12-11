@@ -69,7 +69,7 @@ static void AddPiece(const int sq, S_BOARD *board, const int piece){
     ASSERT(PieceValid(piece));
     ASSERT(SqOnBoard(sq));
 
-    int col = PieceCol[sq];
+    int col = PieceCol[piece];
 
     HASHPCE(piece, sq);
 
@@ -106,9 +106,9 @@ static void MovePiece(const int from, const int to, S_BOARD *board){
     int piece = board->pieces[from];
     int col = PieceCol[piece];
 
-    #ifdef DEBUG
+#ifdef DEBUG
     int t_pceNum = FALSE;
-    #endif
+#endif
 
     // Hashing out piece from from_sq
     HASHPCE(piece, from);
@@ -120,10 +120,12 @@ static void MovePiece(const int from, const int to, S_BOARD *board){
     
     // Pawns to clear and set bits
     if(!PieceBig[piece]){
+
         CLRBIT(board->pawns[col], SQ64(from));
         CLRBIT(board->pawns[BOTH], SQ64(from));
+
         SETBIT(board->pawns[col], SQ64(to));
-        SETBIT(board->pawns[BOTH], SQ64(to));        
+        SETBIT(board->pawns[BOTH], SQ64(to));
     }
 
     // pList changes
@@ -131,9 +133,9 @@ static void MovePiece(const int from, const int to, S_BOARD *board){
         if(board->pList[piece][i] == from){
             board->pList[piece][i] = to;
             
-            #ifdef DEBUG
+#ifdef DEBUG
             t_pceNum = TRUE;
-            #endif
+#endif
 
             break;
         }
@@ -336,7 +338,7 @@ void TakeMove(S_BOARD *board){
     if(prPiece != EMPTY){
         ASSERT(PieceValid(prPiece) && !IsPawn[prPiece]);
         ClearPiece(from, board);
-        AddPiece(from, board, (PieceCol[prPiece] == WHITE) ? wP : bP );
+        AddPiece(from, board, ((PieceCol[prPiece] == WHITE) ? wP : bP));
     }
 
     ASSERT(CheckBoard(board));

@@ -101,18 +101,18 @@ int CheckBoard(const S_BOARD *board){
 
     }
 
-    for(int p = wP; p < bK; p++){
+    for(int p = wP; p <= bK; p++){
         ASSERT(board->pceNum[p] == t_pceNum[p]);
     }
 
     int pcount;
-    pcount = CNT(board->pawns[WHITE]);
+    pcount = CNT(t_pawns[WHITE]);
     ASSERT(pcount == board->pceNum[wP]);
 
-    pcount = CNT(board->pawns[BLACK]);
+    pcount = CNT(t_pawns[BLACK]);
     ASSERT(pcount == board->pceNum[bP]);
 
-    pcount = CNT(board->pawns[BOTH]);
+    pcount = CNT(t_pawns[BOTH]);
     ASSERT(pcount == (board->pceNum[wP] + board->pceNum[bP]));
 
     while(t_pawns[WHITE]){
@@ -144,6 +144,7 @@ int CheckBoard(const S_BOARD *board){
     ASSERT(board->enPass == NO_SQ ||(RanksBrd[board->enPass] == RANK_6 && board->side == WHITE) || (RanksBrd[board->enPass] == RANK_3 && board->side == BLACK));
 
 
+    // Doubtish
     ASSERT(board->pieces[board->kingSq[WHITE]] == wK || board->pieces[board->kingSq[WHITE]] == OFF_BOARD);
     ASSERT(board->pieces[board->kingSq[BLACK]] == bK || board->pieces[board->kingSq[BLACK]] == OFF_BOARD);
 
