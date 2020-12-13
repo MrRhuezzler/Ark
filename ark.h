@@ -14,7 +14,7 @@
 
 /* --------------- MACROS --------------- */
 
-// #define DEBUG // Remove this during Release
+#define DEBUG // Remove this during Release
 // Assert Function for checking conditions
 #ifndef DEBUG
 #define ASSERT(n)
@@ -29,7 +29,7 @@ exit(1);}
 
 
 // Macro to get from FILE, RANK to SQUARE INDEX
-#define FR2SQ(f, r) (A1 + f) + (r * 10)
+#define FR2SQ(f, r) (A1 + (f)) + ((r) * 10)
 
 // Macro for popBit
 #define POP(bb) popBit(bb)
@@ -38,8 +38,8 @@ exit(1);}
 #define CNT(bb) countBit(bb)
 
 // Macros for set and clear bit
-#define CLRBIT(bb, b) (bb &= ClearMask[b])
-#define SETBIT(bb, b) (bb |= SetMask[b])
+#define CLRBIT(bb, b) (bb &= ClearMask[(b)])
+#define SETBIT(bb, b) (bb |= SetMask[(b)])
 
 #define SQ64(sq120) (SQ120toSQ64[(sq120)])
 #define SQ120(sq64) (SQ64toSQ120[(sq64)])
@@ -71,14 +71,17 @@ exit(1);}
 #define MFLAGPRO 0xF00000
 
 // Move Generators
-#define MOVE(f, t, ca, pro, fl) (f | (t << 7) | (ca << 14) | (pro << 20) | (fl))
-#define SQOFFBOARD(sq) (FilesBrd[sq] == OFF_BOARD)
+#define MOVE(f, t, ca, pro, fl) ((f) | ((t) << 7) | ((ca) << 14) | ((pro) << 20) | ((fl)))
+#define SQOFFBOARD(sq) (FilesBrd[(sq)] == OFF_BOARD)
 
 // MakeMove
-#define HASHPCE(pce, sq) (board->posKey ^= pieceKey[pce][sq])
+#define HASHPCE(pce, sq) (board->posKey ^= pieceKey[(pce)][(sq)])
 #define HASHCA (board->posKey ^= castlePemKey[board->castlePerm])
 #define HASHSIDE (board->posKey ^= (sideKey))
 #define HASHEP (board->posKey ^= pieceKey[EMPTY][board->enPass])
+
+// Io
+#define NOMOVE 0
 
 /* --------------- GLOBALS --------------- */
 
@@ -149,6 +152,7 @@ extern void SqAt(const int side, const S_BOARD *board);
 extern char * PrSq(const int sq);
 extern char * PrMove(const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
+extern int ParseInputMove(char *input, S_BOARD *board);
 
 // validate.c
 extern int SqOnBoard(const int sq);
@@ -158,6 +162,7 @@ extern int PieceValidEmpty(const int pce);
 extern int PieceValid(const int pce);
 
 // movegen.c
+extern int MoveExists(S_BOARD *board, const int move);
 extern void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list);
 
 // makemove.c
@@ -167,5 +172,18 @@ extern void TakeMove(S_BOARD *board);
 
 // perft.c
 extern void perftTest(int depth, S_BOARD *board);
+
+// search.c
+extern int IsRepetition(const S_BOARD *board);
+extern void SearchPosition(S_BOARD *board);
+
+// misc.c
+extern int getMillis();
+
+// pvtable.c
+extern void InitPvTable(S_PVTABLE *table);
+extern int ProbePvTable(S_BOARD *board);
+extern void StorePvTable(S_BOARD *board, int move);
+int GetPvLine(S_BOARD *board, int depth);
 
 #endif

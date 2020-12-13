@@ -373,7 +373,7 @@ void resetBoard(S_BOARD *board){
     board->castlePerm = 0;
     board->posKey = 0ULL;
 
-
+    InitPvTable(board->pvTable);
 
 }
 

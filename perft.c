@@ -31,6 +31,7 @@ void perftTest(int depth, S_BOARD *board){
     S_MOVELIST list[1];
 
     GenerateAllMoves(board, list);
+    int start = getMillis();
 
     long cummulative_nodes;
 
@@ -47,5 +48,5 @@ void perftTest(int depth, S_BOARD *board){
         printf("%2d) %s : %ld\n", i + 1, PrMove(list->moves[i].move), old);
     }
 
-    printf("Total Moves Searched... %ld\n", total_nodes);
+    printf("Total Moves Searched... %ld in %dms\n", total_nodes, getMillis() - start);
 }

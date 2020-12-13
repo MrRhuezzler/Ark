@@ -49,3 +49,47 @@ void PrintMoveList(const S_MOVELIST *list){
     }
     printf("Total Number of Moves : %d\n", list->count);
 }
+
+
+
+int ParseInputMove(char *input, S_BOARD *board){
+
+    if(!(input[1] <= '8' && input[1] >= '1')) return NOMOVE;
+    if(!(input[3] <= '8' && input[3] >= '1')) return NOMOVE;
+    if(!(input[0] <= 'h' && input[0] >= 'a')) return NOMOVE;
+    if(!(input[2] <= 'h' && input[2] >= 'a')) return NOMOVE;
+
+    int from = FR2SQ(input[0] - 'a', input[1] - '1');
+    int to = FR2SQ(input[2] - 'a', input[3] - '1');
+
+    ASSERT(SqOnBoard(from) && SqOnBoard(to));
+
+    S_MOVELIST list[1];
+    GenerateAllMoves(board, list);
+    int promo = EMPTY, move;
+
+    for(int moveNum = 0; moveNum < list->count; moveNum++){
+        move = list->moves[moveNum].move;
+        if(FROSQ(move) == from && TOSQ(move) == to){
+            promo = PROMOTION(move);
+            if(promo != EMPTY){
+                if(!IsRQ(promo) && IsBQ(promo) && input[4] == 'b'){
+                    return move;
+                }else if(IsRQ(promo) && !IsBQ(promo) && input[4] == 'r'){
+                    return move;
+                }else if(IsKn(promo) && input[4] == 'n'){
+                    return move;
+                }else if(IsRQ(promo) && IsBQ(promo) && input[4] == 'q'){
+                    return move;
+                }
+
+                continue;
+            }
+
+            return move;
+        }
+    }
+
+    return NOMOVE;
+
+}

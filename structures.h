@@ -24,6 +24,19 @@ typedef struct
 
 GAME MOVE */
 
+// Principal Variation List
+typedef struct 
+{
+    U64 poskey;
+    int move;
+}S_PVENTRY;
+
+typedef struct
+{
+    S_PVENTRY *pTable;
+    int num_entires;
+}S_PVTABLE;
+
 typedef struct
 {
 
@@ -105,8 +118,18 @@ typedef struct
     // pList[wN][0] = E1;
     // pList[wN][1] = D4;
 
+    S_PVTABLE pvTable[1];
+    int pvArray[MAX_DEPTH];
+
 
 } S_BOARD;
+
+
+
+
+
+
+
 
 
 

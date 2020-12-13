@@ -33,6 +33,31 @@ const int piecesDir[13][8] = {
 
 const int numDir[13] = {0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8};
 
+// To Check whether a move exists
+int MoveExists(S_BOARD *board, const int move){
+
+    S_MOVELIST list[1];
+    GenerateAllMoves(board, list);
+
+    for(int i = 0; i < list->count; i++){
+
+        if(!MakeMove(board, list->moves[i].move)){
+            continue;
+        }
+
+        TakeMove(board);
+
+        if(list->moves[i].move == move){
+            return TRUE;
+        }
+
+    }
+
+    return FALSE;
+
+}
+
+
 // Adding a normal move
 static void addQuietMove(const S_BOARD *board, int move, S_MOVELIST *list){
     list->moves[list->count].move = move;
