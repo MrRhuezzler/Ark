@@ -62,6 +62,8 @@ int ParseInputMove(char *input, S_BOARD *board){
     int from = FR2SQ(input[0] - 'a', input[1] - '1');
     int to = FR2SQ(input[2] - 'a', input[3] - '1');
 
+    printf("Parsed Input : %s\n", input);
+
     ASSERT(SqOnBoard(from) && SqOnBoard(to));
 
     S_MOVELIST list[1];

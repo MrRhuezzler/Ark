@@ -100,4 +100,5 @@ void Init(){
     InitBITMASKS();
     InitHASHKEYS();
     InitRANKS_AND_FILES();
+    InitMvvLVA();
 }

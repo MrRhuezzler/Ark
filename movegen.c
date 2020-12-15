@@ -9,6 +9,57 @@ Generate Moves(board, list)
 
 */
 
+// Move Order
+// PV TABLE
+// Most Valuable Victim Least Valuable Attacker
+
+/*
+* MvvLVA
+*  [Vic][Att] = score such that high for P x Q and low for Q x P
+* P x Q
+* N x Q
+* B x Q
+* R x Q
+* Q x Q
+*
+* P x R
+* N x R
+* B x R
+* R x R
+* Q x R
+* ...
+* B
+* N
+* P
+* ...
+*
+*/
+
+
+
+
+// Killer Moves
+// Search History
+
+// Used to set the score in the move generator
+
+const int VictimScore[13] = { 0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600 };
+
+static int MvvLVA[13][13];
+
+void InitMvvLVA() {
+
+    int attacker, victim;
+
+    for (victim = wP; victim <= bK; victim++) {
+        for (attacker = wP; attacker <= bK; attacker++) {
+            MvvLVA[victim][attacker] = VictimScore[victim] + 6 - (VictimScore[attacker] / 100);
+        }
+    }
+
+}
+
+
 const int sliderPieces[] = {wB, wR, wQ, 0, bB, bR, bQ, 0};
 const int jumpingPieces[] = {wN, wK, 0, bN, bK, 0};
 
@@ -61,21 +112,31 @@ int MoveExists(S_BOARD *board, const int move){
 // Adding a normal move
 static void addQuietMove(const S_BOARD *board, int move, S_MOVELIST *list){
     list->moves[list->count].move = move;
-    list->moves[list->count].score = 0;
+
+    if (board->searchKillers[0][board->ply] == move) {
+        list->moves[list->count].score = 900000;
+    }
+    else if (board->searchKillers[1][board->ply] == move) {
+        list->moves[list->count].score = 800000;
+    }
+    else {
+        list->moves[list->count].score = board->searchHistory[board->pieces[FROSQ(move)]][TOSQ(move)];
+    }
+    // list->moves[list->count].score = 0;
     list->count++;
 }
 
 // Adding a Capture move
 static void addCaptureMove(const S_BOARD *board, int move, S_MOVELIST *list){
     list->moves[list->count].move = move;
-    list->moves[list->count].score = 0;
+    list->moves[list->count].score = MvvLVA[CAPTURED(move)][board->pieces[FROSQ(move)]] + 1000000;
     list->count++;
 }
 
 // Adding a EnPass move
 static void addEnPassMove(const S_BOARD *board, int move, S_MOVELIST *list){
     list->moves[list->count].move = move;
-    list->moves[list->count].score = 0;
+    list->moves[list->count].score = 105 + 1000000;
     list->count++;
 }
 
@@ -349,3 +410,143 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
 
 
 
+void GenerateAllCaptures(const S_BOARD* board, S_MOVELIST* list) {
+
+
+    ASSERT(CheckBoard(board));
+
+    list->count = 0;
+    int side = board->side;
+
+    if (side == WHITE) {
+        // White to Play
+
+        // Pawn
+        for (int pceNum = 0; pceNum < board->pceNum[wP]; pceNum++) {
+
+            int sq = board->pList[wP][pceNum];
+            ASSERT(SqOnBoard(sq));
+
+            // Capture
+            if (!SQOFFBOARD(sq + 9) && PieceCol[board->pieces[sq + 9]] == BLACK) {
+                addWhitePawnCaptureMoves(board, sq, sq + 9, board->pieces[sq + 9], list);
+            }
+
+            if (!SQOFFBOARD(sq + 11) && PieceCol[board->pieces[sq + 11]] == BLACK) {
+                addWhitePawnCaptureMoves(board, sq, sq + 11, board->pieces[sq + 11], list);
+            }
+
+            if (board->enPass != NO_SQ) {
+                if ((sq + 9) == board->enPass) {
+                    addEnPassMove(board, MOVE(sq, sq + 9, EMPTY, EMPTY, MFLAGEP), list);
+                }
+
+                if ((sq + 11) == board->enPass) {
+                    addEnPassMove(board, MOVE(sq, sq + 11, EMPTY, EMPTY, MFLAGEP), list);
+                }
+            }
+        }
+    }
+    else {
+
+        // Black to play
+
+        // Pawn
+        for (int pceNum = 0; pceNum < board->pceNum[bP]; pceNum++) {
+
+            int sq = board->pList[bP][pceNum];
+            ASSERT(SqOnBoard(sq));
+
+            // Capture
+            if (!SQOFFBOARD(sq - 9) && PieceCol[board->pieces[sq - 9]] == WHITE) {
+                addBlackPawnCaptureMoves(board, sq, sq - 9, board->pieces[sq - 9], list);
+            }
+
+            if (!SQOFFBOARD(sq - 11) && PieceCol[board->pieces[sq - 11]] == WHITE) {
+                addBlackPawnCaptureMoves(board, sq, sq - 11, board->pieces[sq - 11], list);
+            }
+
+            if (board->enPass != NO_SQ) {
+                if ((sq - 9) == board->enPass) {
+                    addEnPassMove(board, MOVE(sq, sq - 9, EMPTY, EMPTY, MFLAGEP), list);
+                }
+
+                if ((sq - 11) == board->enPass) {
+                    addEnPassMove(board, MOVE(sq, sq - 11, EMPTY, EMPTY, MFLAGEP), list);
+                }
+            }
+        }
+    }
+
+
+
+    // Slider Pieces
+
+    int i = sliderPiecesIndex[board->side];
+    int piece = sliderPieces[i++];
+
+    while (piece) {
+
+        ASSERT(PieceValid(piece));
+
+        for (int j = 0; j < board->pceNum[piece]; j++) {
+
+            int sq = board->pList[piece][j];
+
+            ASSERT(SqOnBoard(sq));
+
+            for (int k = 0; k < numDir[piece]; k++) {
+                int t_sq = sq + piecesDir[piece][k];
+
+                while (!SQOFFBOARD(t_sq)) {
+                    if (board->pieces[t_sq] != EMPTY) {
+                        if (PieceCol[board->pieces[t_sq]] == board->side ^ 1) {
+                            addCaptureMove(board, MOVE(sq, t_sq, board->pieces[t_sq], EMPTY, 0), list);
+                        }
+                        break;
+                    }
+                    t_sq += piecesDir[piece][k];
+                }
+            }
+        }
+        piece = sliderPieces[i++];
+    }
+
+
+
+    // Jumping Pieces
+
+    i = jumpingPiecesIndex[board->side];
+    piece = jumpingPieces[i++];
+
+    while (piece) {
+
+        ASSERT(PieceValid(piece));
+
+        for (int j = 0; j < board->pceNum[piece]; j++) {
+
+            int sq = board->pList[piece][j];
+
+            ASSERT(SqOnBoard(sq));
+
+            for (int k = 0; k < numDir[piece]; k++) {
+
+                int t_sq = sq + piecesDir[piece][k];
+
+                if (SQOFFBOARD(t_sq)) {
+                    continue;
+                }
+
+                if (board->pieces[t_sq] != EMPTY) {
+                    if (PieceCol[board->pieces[t_sq]] == board->side ^ 1) {
+                        addCaptureMove(board, MOVE(sq, t_sq, board->pieces[t_sq], EMPTY, 0), list);
+                    }
+                    continue;
+                }
+            }
+
+        }
+        piece = jumpingPieces[i++];
+    }
+
+}

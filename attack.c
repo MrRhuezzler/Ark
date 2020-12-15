@@ -23,7 +23,7 @@ int isSqAttacked(const int sq, const int side, const S_BOARD *board){
     // Knight
     for(int i =  0; i < 8; i++){
         int piece = board->pieces[sq + KnDir[i]];
-        if(IsKn(piece) && PieceCol[piece] == side){
+        if(piece != OFF_BOARD && IsKn(piece) && PieceCol[piece] == side){
             return TRUE;
         }
     }
@@ -31,7 +31,7 @@ int isSqAttacked(const int sq, const int side, const S_BOARD *board){
     // King
     for(int i = 0; i < 8; i++){
         int piece = board->pieces[sq + KiDir[i]];
-        if(IsKi(piece) && PieceCol[piece] == side){
+        if(piece != OFF_BOARD && IsKi(piece) && PieceCol[piece] == side){
             return TRUE;
         }
     }

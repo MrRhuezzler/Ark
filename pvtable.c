@@ -7,21 +7,22 @@ int GetPvLine(S_BOARD *board, int depth){
     ASSERT(depth < MAX_DEPTH);
 
     int move = ProbePvTable(board);
-    int curr_ply = board->ply;
     int count = 0;
 
-    while(move && count < depth){
+    while(move != NOMOVE && count < depth){
+            
+        ASSERT(count < MAX_DEPTH);
 
         if(MoveExists(board, move)){
-            board->pvArray[count++] = move;
             MakeMove(board, move);
+            board->pvArray[count++] = move;
         }else{
             break;
         }
         move = ProbePvTable(board);
     }
 
-    while(board->ply > curr_ply){
+    while(board->ply > 0){
         TakeMove(board);
     }
 
@@ -36,9 +37,11 @@ const int pvSize = 0x100000 * 2; // 2MB of space
 
 void ClearTable(S_PVTABLE *table){
 
-    for(int i = 0; i < table->num_entires; i++){
-        table->pTable[i].move = NOMOVE;
-        table->pTable[i].poskey = 0ULL;
+    S_PVENTRY* pventry;
+
+    for(pventry = table->pTable; pventry < table->pTable + table->num_entires; pventry++){
+        pventry->move = NOMOVE;
+        pventry->poskey = 0ULL;
     }
 
 }
@@ -46,8 +49,9 @@ void ClearTable(S_PVTABLE *table){
 
 void InitPvTable(S_PVTABLE *table){
 
-    int size = pvSize / sizeof(S_PVENTRY);
-    table->num_entires = size - 2;
+    table->pTable = NULL;
+    int size = (pvSize / sizeof(S_PVENTRY)) - 2;
+    table->num_entires = size;
     table->pTable = (S_PVENTRY *) malloc(table->num_entires * sizeof(S_PVENTRY));
     ClearTable(table);
 

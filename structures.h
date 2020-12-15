@@ -121,16 +121,38 @@ typedef struct
     S_PVTABLE pvTable[1];
     int pvArray[MAX_DEPTH];
 
+    // When a move/ position overflows alpha
+    int searchHistory[13][BRD_SQ_NUM];
+    // Beta cutoff
+    int searchKillers[2][MAX_DEPTH];
+
 
 } S_BOARD;
 
 
+typedef struct
+{
 
+    int starttime;
+    int stoptime;
+    int depth;
+    int depthset;
+    int timeset;
+    int movestogo;
+    int infinite;
 
+    // Total number of nodes visited
+    long nodes;
 
+    // If GUI sends a quit, it is set to TRUE
+    int quit;
+    // If Stopped is set to TRUE, Maintain the results from the previous iteration
+    int stopped;
 
+    // Move Ordering
+    float fh;
+    float fhf;
 
-
-
+}S_SEARCHINFO;
 
 #endif

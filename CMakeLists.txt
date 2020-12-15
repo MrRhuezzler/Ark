@@ -5,4 +5,4 @@ project(Ark)
 add_compile_definitions(WIN32)
 # endif()
 
-add_executable("Ark" "init.c" "bitboard.c" "board.c" "hashkey.c" "attack.c" "io.c" "movegen.c" "makemove.c" "validate.c" "perft.c" "search.c" "misc.c" "pvtable.c" "ark.c" "ark.h")
+add_executable("Ark" "init.c" "bitboard.c" "board.c" "hashkey.c" "attack.c" "io.c" "movegen.c" "makemove.c" "validate.c" "perft.c" "search.c" "misc.c" "pvtable.c" "evaluate.c" "ark.c" "ark.h")

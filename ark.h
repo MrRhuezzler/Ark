@@ -14,7 +14,7 @@
 
 /* --------------- MACROS --------------- */
 
-#define DEBUG // Remove this during Release
+// #define DEBUG // Remove this during Release
 // Assert Function for checking conditions
 #ifndef DEBUG
 #define ASSERT(n)
@@ -162,8 +162,10 @@ extern int PieceValidEmpty(const int pce);
 extern int PieceValid(const int pce);
 
 // movegen.c
+extern void InitMvvLVA();
 extern int MoveExists(S_BOARD *board, const int move);
 extern void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list);
+extern void GenerateAllCaptures(const S_BOARD* board, S_MOVELIST* list);
 
 // makemove.c
 extern int MakeMove(S_BOARD *board, const int move);
@@ -174,16 +176,18 @@ extern void TakeMove(S_BOARD *board);
 extern void perftTest(int depth, S_BOARD *board);
 
 // search.c
-extern int IsRepetition(const S_BOARD *board);
-extern void SearchPosition(S_BOARD *board);
+extern void SearchPosition(S_BOARD *board, S_SEARCHINFO *info);
 
 // misc.c
 extern int getMillis();
 
 // pvtable.c
 extern void InitPvTable(S_PVTABLE *table);
+extern void ClearTable(S_PVTABLE *table);
 extern int ProbePvTable(S_BOARD *board);
 extern void StorePvTable(S_BOARD *board, int move);
 int GetPvLine(S_BOARD *board, int depth);
 
+// evaluate.c
+extern int EvalPosition(const S_BOARD *board);
 #endif
