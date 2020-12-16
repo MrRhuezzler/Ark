@@ -2,7 +2,7 @@
 Author           : [MrRhuezzler](https://github.com/MrRhuezzler)  
 Project Language : C  
 Project Year     : 2020  
-Status           : :triangular_flag_on_post: (Under Development)  
+Status           : :white_check_mark: (Working) 
 
 This is a minimalistic Chess Engine.  
 
@@ -21,6 +21,6 @@ This is a minimalistic Chess Engine.
     - [X] Do / Undo Moves
     - [X] Skeleton Evaluation ( Milestone )
     - [X] Search Algorithm
-    - [ ] GUI Connection :triangular_flag_on_post: (Current)
-        - [ ] [UCI Protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html)
+    - [X] GUI Connection :triangular_flag_on_post: (Current)
+        - [X] [UCI Protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html)
     

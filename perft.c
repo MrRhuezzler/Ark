@@ -48,5 +48,5 @@ void perftTest(int depth, S_BOARD *board){
         printf("%2d) %s : %ld\n", i + 1, PrMove(list->moves[i].move), old);
     }
 
-    printf("Total Moves Searched... %ld in %dms\n", total_nodes, getMillis() - start);
+    printf("Total Moves Searched... %ld in %lldms\n", total_nodes, getMillis() - start);
 }

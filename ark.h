@@ -179,7 +179,8 @@ extern void perftTest(int depth, S_BOARD *board);
 extern void SearchPosition(S_BOARD *board, S_SEARCHINFO *info);
 
 // misc.c
-extern int getMillis();
+extern U64 getMillis();
+extern void ReadInput(S_SEARCHINFO* info);
 
 // pvtable.c
 extern void InitPvTable(S_PVTABLE *table);
@@ -190,4 +191,8 @@ int GetPvLine(S_BOARD *board, int depth);
 
 // evaluate.c
 extern int EvalPosition(const S_BOARD *board);
+
+
+// uci.c
+extern void UCILoop();
 #endif

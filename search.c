@@ -4,14 +4,12 @@
 #define MATE 29000
 
 // Check if time up, or interrupt from GUI
-static void CheckUp(S_SEARCHINFO *info){
-
-    if (info->timeset == TRUE && getMills() > info->stoptime) {
+static void CheckUp(S_SEARCHINFO* info) {
+    if (info->timeset == TRUE && getMillis() > info->stoptime) {
         info->stopped = TRUE;
     }
-
+    ReadInput(info);
 }
-
 static void PickBestMove(int moveNum, S_MOVELIST* list) {
     S_MOVE temp;
     int bestScore = 0;
@@ -63,8 +61,7 @@ static void ClearForSearch(S_BOARD *board, S_SEARCHINFO *info){
     ClearTable(board->pvTable);
     board->ply = 0;
 
-    info->starttime = getMillis();
-    info->stoptime = 0;
+    info->stopped = FALSE;
     info->nodes = 0;
     info->fhf = 0;
     info->fh = 0;
@@ -83,7 +80,7 @@ static int Quiescence(int alpha, int beta, S_BOARD *board,S_SEARCHINFO *info){
 
     info->nodes++;
 
-    if (IsRepetition(board) || board->fiftyMoves >= 100) {
+    if ((IsRepetition(board) || board->fiftyMoves >= 100) && board->ply) {
         return 0;
     }
 
@@ -110,6 +107,16 @@ static int Quiescence(int alpha, int beta, S_BOARD *board,S_SEARCHINFO *info){
     int oldAlpha = alpha;
     int bestMove = NOMOVE;
     score = -INFINITE;
+    int PvMove = ProbePvTable(board);
+
+    if (PvMove != NOMOVE) {
+        for (int i = 0; i < list->count; ++i) {
+            if (list->moves[i].move == PvMove) {
+                list->moves[i].score = 2000000;
+                break;
+            }
+        }
+    }
 
     for (moveNum = 0; moveNum < list->count; moveNum++) {
 
@@ -164,9 +171,10 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *board,S_SEARCHINFO
 
     info->nodes++;
 
-    if(IsRepetition(board) || board->fiftyMoves >= 100){
+    if ((IsRepetition(board) || board->fiftyMoves >= 100) && board->ply) {
         return 0;
     }
+
 
     // Thats the maximum u can go
     if(board->ply > MAX_DEPTH - 1){
@@ -280,8 +288,10 @@ void SearchPosition(S_BOARD *board, S_SEARCHINFO *info){
         pvMoves = GetPvLine(board, currentDepth);
         bestMove = board->pvArray[0];
 
-        printf("Depth:%d score:%d move:%s nodes:%ld ",
-            currentDepth, bestScore, PrMove(bestMove), info->nodes);
+        //printf("Depth:%d score:%d move:%s nodes:%ld ",
+        //  currentDepth, bestScore, PrMove(bestMove), info->nodes);
+
+        printf("info score cp %d depth %d nodes %ld time %lld ", bestScore, currentDepth, info->nodes, getMillis() - info->starttime);
 
         pvMoves = GetPvLine(board, currentDepth);
         printf("pv");
@@ -289,8 +299,10 @@ void SearchPosition(S_BOARD *board, S_SEARCHINFO *info){
             printf(" %s", PrMove(board->pvArray[pvNum]));
         }
         printf("\n");
-        printf("Ordering:%.2f\n", (info->fhf / info->fh));
+        //printf("Ordering:%.2f\n", (info->fhf / info->fh));
 
     }
+    // info score cp 13  depth 1 nodes 13 time 15 pv f1b5
+    printf("bestmove %s\n", PrMove(bestMove));
 
 }

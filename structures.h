@@ -133,8 +133,8 @@ typedef struct
 typedef struct
 {
 
-    int starttime;
-    int stoptime;
+    U64 starttime;
+    U64 stoptime;
     int depth;
     int depthset;
     int timeset;

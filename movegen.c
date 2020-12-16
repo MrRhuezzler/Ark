@@ -353,7 +353,7 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
 
                 while(!SQOFFBOARD(t_sq)){
                     if(board->pieces[t_sq] != EMPTY){
-                        if(PieceCol[board->pieces[t_sq]] == board->side ^ 1){
+                        if(PieceCol[board->pieces[t_sq]] == (board->side ^ 1)){
                             addCaptureMove(board, MOVE(sq, t_sq, board->pieces[t_sq], EMPTY, 0), list);
                         }
                         break;
@@ -392,7 +392,7 @@ void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list){
                 }
 
                 if(board->pieces[t_sq] != EMPTY){
-                    if(PieceCol[board->pieces[t_sq]] == board->side ^ 1){
+                    if(PieceCol[board->pieces[t_sq]] == (board->side ^ 1)){
                         addCaptureMove(board, MOVE(sq, t_sq, board->pieces[t_sq], EMPTY, 0), list);
                     }
                     continue;
@@ -500,7 +500,7 @@ void GenerateAllCaptures(const S_BOARD* board, S_MOVELIST* list) {
 
                 while (!SQOFFBOARD(t_sq)) {
                     if (board->pieces[t_sq] != EMPTY) {
-                        if (PieceCol[board->pieces[t_sq]] == board->side ^ 1) {
+                        if (PieceCol[board->pieces[t_sq]] == (board->side ^ 1)) {
                             addCaptureMove(board, MOVE(sq, t_sq, board->pieces[t_sq], EMPTY, 0), list);
                         }
                         break;
@@ -538,7 +538,7 @@ void GenerateAllCaptures(const S_BOARD* board, S_MOVELIST* list) {
                 }
 
                 if (board->pieces[t_sq] != EMPTY) {
-                    if (PieceCol[board->pieces[t_sq]] == board->side ^ 1) {
+                    if (PieceCol[board->pieces[t_sq]] == (board->side ^ 1)) {
                         addCaptureMove(board, MOVE(sq, t_sq, board->pieces[t_sq], EMPTY, 0), list);
                     }
                     continue;
