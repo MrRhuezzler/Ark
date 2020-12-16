@@ -21,6 +21,6 @@ This is a minimalistic Chess Engine.
     - [X] Do / Undo Moves
     - [X] Skeleton Evaluation ( Milestone )
     - [X] Search Algorithm
-    - [X] GUI Connection :triangular_flag_on_post: (Current)
+    - [X] GUI Connection
         - [X] [UCI Protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html)
     
