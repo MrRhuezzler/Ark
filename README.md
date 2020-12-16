@@ -1,10 +1,11 @@
 ![ARK](/Resources/header.png)
 ---
-#### Author           : [MrRhuezzler](https://github.com/MrRhuezzler)  
-#### Project Language : C  
-#### Project Year     : 2020  
-#### Status           : :white_check_mark: (Working) 
-#### Inspired by Bluefever !
+Author           : [MrRhuezzler](https://github.com/MrRhuezzler)  
+Project Language : C  
+Project Year     : 2020  
+Status           : :white_check_mark: (Working) 
+
+Inspired by Bluefever !
 
 - ## Progress :
     - [X] Board Representation
