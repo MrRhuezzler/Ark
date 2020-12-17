@@ -1,14 +1,11 @@
-# The Ark - (Chess Engine)
+![ARK](/Resources/header.png)
+---
 Author           : [MrRhuezzler](https://github.com/MrRhuezzler)  
 Project Language : C  
 Project Year     : 2020  
 Status           : :white_check_mark: (Working) 
 
-This is a minimalistic Chess Engine.  
 Inspired by Bluefever !
-
-## Board Representation
-![ChessBoardRepresentation](/Resources/ChessBoardRep.jpg)
 
 - ## Progress :
     - [X] Board Representation
@@ -24,4 +21,6 @@ Inspired by Bluefever !
     - [X] Search Algorithm
     - [X] GUI Connection
         - [X] [UCI Protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html)
-    
+
+## Board Representation
+![ChessBoardRepresentation](/Resources/ChessBoardRep.jpg)
