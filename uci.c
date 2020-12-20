@@ -69,69 +69,8 @@ void ParseGo(char* line, S_SEARCHINFO* info, S_BOARD* board) {
 		time, info->starttime, info->stoptime, info->depth, info->timeset);
 	SearchPosition(board, info);
 }
-// position fen FENSTRING
-// position startpos
-// .... moves e2e4 ...
 
-/*
-void ParsePos(char* line, S_BOARD* board) {
-	
-	int index = 9;
 
-	if (!strncmp(line + index, "fen", 3)) {
-		
-		// position fen FENSTR moves
-		// position fen FENSTR 00000
-		char FENSTR[150];
-		index = 13;
-		int i = 0;
-		
-		while (line[index] != '\0' && line[index] != 'm') {
-			FENSTR[i++] = line[index++];
-		}
-
-		parseFen(FENSTR, board);
-	}
-	else {
-
-		// position startpos
-
-		parseFen(START_FEN, board);
-		index = 18;
-	}
-
-	if (!strncmp(line + index, "moves", 5)) {
-		index += 6;
-		int move = NOMOVE;
-		char moves[6];
-		int i = 0;
-
-		while (line[index] != '\0') {
-			if (line[index] == ' ') {
-				i = 0;
-				move = ParseInputMove(moves, board);
-				if (move != NOMOVE) {
-					MakeMove(board, move);
-					board->ply = 0;
-				}
-			}
-			else {
-				moves[i++] = line[index];
-			}
-			index++;
-		}
-
-		move = ParseInputMove(moves, board);
-		if (move != NOMOVE) {
-			MakeMove(board, move);
-			board->ply = 0;
-		}
-	}
-
-	printBoard(board);
-
-}
-*/
 void ParsePos(char* lineIn, S_BOARD* board) {
 
 	lineIn += 9;
@@ -167,6 +106,53 @@ void ParsePos(char* lineIn, S_BOARD* board) {
 	}
 	printBoard(board);
 }
+
+#ifdef BETA
+// Beta Feature
+void matein3(S_BOARD *board, S_SEARCHINFO *info){
+
+	FILE *fp;
+
+	fp = fopen("MateIn3.txt", "r");
+
+	if(fp == NULL){
+		printf("Couldn't find the problem sheet\n");
+		return;
+	}
+
+	char buffer[250];
+	char fenstr[250];
+	char choice[50];
+
+	do{
+		for(int i = 0; i < 3; i++){
+			switch (i)
+			{
+			case 0:
+				fgets(buffer, 250, fp);
+				printf("Game : %s", buffer);
+				break;
+			case 1:
+				fgets(fenstr, 250, fp);
+				break;
+			case 2:
+				fgets(buffer, 250, fp);
+				printf("BestMoves : %s", buffer);
+				break;
+			}
+		}
+
+		parseFen(fenstr, board);
+		printBoard(board);
+		info->depth = 4;
+		SearchPosition(board, info);
+		printf("Enter \"quit\" to Quit : ");
+		scanf("%s", &choice);
+
+	}while ((strcpy(choice, "quit") != 0) && (!feof(fp)));
+
+}
+#endif
 
 void UCILoop() {
 	
@@ -216,7 +202,11 @@ void UCILoop() {
 			info->quit = TRUE;
 			break;
 		}
-
+		#ifdef BETA
+		else if(!strncmp(line, "matein3", 7)){
+			matein3(board, info);
+		}
+		#endif
 		if (info->quit) {
 			break;
 		}

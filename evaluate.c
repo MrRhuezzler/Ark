@@ -120,7 +120,10 @@ int EvalPosition(const S_BOARD *board) {
 		sq = board->pList[pce][pceNum];
 		ASSERT(SqOnBoard(sq));
 		score -= RookTable[MIRROR64(SQ64(sq))];
-	}	
+	}
+
+
+	
 	
 	if(board->side == WHITE) {
 		return score;

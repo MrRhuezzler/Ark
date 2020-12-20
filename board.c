@@ -36,35 +36,7 @@ int getPiecefromChar(char ch){
     return piece;
 }
 
-char getCharfromPiece(int piece){
-
-    char ch;
-
-    switch (piece)
-    {
-    case wP:
-    case bP: ch = 'P'; break;
-    case wN:
-    case bN: ch = 'N'; break;
-    case wB:
-    case bB: ch = 'B'; break;
-    case wR:
-    case bR: ch = 'R'; break;
-    case wQ:
-    case bQ: ch = 'Q'; break;
-    case wK:
-    case bK: ch = 'K'; break;
-    
-    default:
-        ch = '-';
-        break;
-    }
-
-    return ch;
-
-}
-
-
+// Double chechking whether the pieces on the board are setup correctly
 int CheckBoard(const S_BOARD *board){
 
     int t_pceNum[13] = {0};
@@ -105,6 +77,7 @@ int CheckBoard(const S_BOARD *board){
         ASSERT(board->pceNum[p] == t_pceNum[p]);
     }
 
+    // Check the pawn bitmaps
     int pcount;
     pcount = CNT(t_pawns[WHITE]);
     ASSERT(pcount == board->pceNum[wP]);
@@ -115,6 +88,7 @@ int CheckBoard(const S_BOARD *board){
     pcount = CNT(t_pawns[BOTH]);
     ASSERT(pcount == (board->pceNum[wP] + board->pceNum[bP]));
 
+    // Check pawn bitmaps and position
     while(t_pawns[WHITE]){
         int sq64 = POP(&t_pawns[WHITE]);
         ASSERT(board->pieces[SQ120(sq64)] == wP);
@@ -132,19 +106,20 @@ int CheckBoard(const S_BOARD *board){
         ASSERT(board->pieces[SQ120(sq64)] == wP || board->pieces[SQ120(sq64)] == bP);
     }
 
-
+    // Check the count of each category
     ASSERT(t_material[WHITE] == board->material[WHITE] && t_material[BLACK] == board->material[BLACK]);
     ASSERT(t_bigPce[WHITE] == board->bigPce[WHITE] && t_bigPce[BLACK] == board->bigPce[BLACK]);
     ASSERT(t_majorPce[WHITE] == board->majorPce[WHITE] && t_majorPce[BLACK] == board->majorPce[BLACK]);
     ASSERT(t_minorPce[WHITE] == board->minorPce[WHITE] && t_minorPce[BLACK] == board->minorPce[BLACK]);
 
     ASSERT(board->side == WHITE || board->side == BLACK);
+
+    // Check the poskey
     ASSERT(generatePosKey(board) == board->posKey);
 
     ASSERT(board->enPass == NO_SQ ||(RanksBrd[board->enPass] == RANK_6 && board->side == WHITE) || (RanksBrd[board->enPass] == RANK_3 && board->side == BLACK));
 
-
-    // Doubtish
+    // Check the king's position (This Also includes that a position might have no kings)
     ASSERT(board->pieces[board->kingSq[WHITE]] == wK || board->pieces[board->kingSq[WHITE]] == OFF_BOARD);
     ASSERT(board->pieces[board->kingSq[BLACK]] == bK || board->pieces[board->kingSq[BLACK]] == OFF_BOARD);
 
@@ -152,7 +127,7 @@ int CheckBoard(const S_BOARD *board){
 }
 
 
-
+// Update the values of the each category
 void UpdateListsMaterial(S_BOARD *board){
 
     for(int index = 0; index < BRD_SQ_NUM; index++){
@@ -184,8 +159,7 @@ void UpdateListsMaterial(S_BOARD *board){
 }
 
 
-
-
+// Parse a FEN in char * passed, and setup the board accordingly
 int parseFen(const char *fen, S_BOARD *board){
 
     ASSERT(fen != NULL);
@@ -278,64 +252,12 @@ int parseFen(const char *fen, S_BOARD *board){
 
     UpdateListsMaterial(board);
     ASSERT(CheckBoard(board));
-    
-    /*
-    for(int i = 0;index < strlen(fen); index++){
-
-        if(fen[index] == ' '){
-            i++;
-            continue;
-        }
-
-        switch (i)
-        {
-        case 0:
-            if(fen[index] == 'w'){
-                board->side = WHITE;
-            }else{
-                board->side = BLACK;
-            }
-            break;
-        case 1:
-            switch (fen[index])
-            {
-            case 'K':
-                board->castlePerm |= WKCA;
-                break;
-            case 'Q':
-                board->castlePerm |= WQCA;
-                break;
-            case 'k':
-                board->castlePerm |= BKCA;
-                break;
-            case 'q':
-                board->castlePerm |= BQCA;
-                break;
-            }
-            break;
-        case 2:
-            if(fen[index] != '-'){
-                int enPassFile = fen[index] - 'a';
-                int enPassRank = fen[index + 1] - '1';
-                board->enPass = FR2SQ(enPassFile, enPassRank);
-                index++;
-            }
-            break;
-        default:
-            break;
-        }
-
-    }
-    */
-
-
-
 
     return 0;
 }
 
 
-
+// Revert the board to its original state
 void resetBoard(S_BOARD *board){
 
     // Set all board squares to NO_SQ
@@ -375,6 +297,8 @@ void resetBoard(S_BOARD *board){
 
 }
 
+
+// Prints the board to the console
 void printBoard(const S_BOARD *board){
 
     printf("GAME BOARD \n\n");

@@ -1,10 +1,12 @@
 #include "ark.h"
 
+// Direction Arrays for different pieces
 const int KnDir[] = {+8, +12, +19, +21, -8, -12, -19, -21};
 const int RkDir[] = {-1, -10, 1, 10};
 const int BiDir[] = {-9, -11, 11, 9};
 const int KiDir[] = {-9, -11, 11, 9, -1, -10, 1, 10};
 
+// Function to find whether a particular square is attacked by the given side
 int isSqAttacked(const int sq, const int side, const S_BOARD *board){
 
     ASSERT(SqOnBoard(sq));

@@ -15,7 +15,7 @@
 /* --------------- MACROS --------------- */
 
 // #define DEBUG // Remove this during Release
-// Assert Function for checking conditions
+// Assert Function for checking conditions (Only in Debug Mode)
 #ifndef DEBUG
 #define ASSERT(n)
 #else
@@ -41,14 +41,17 @@ exit(1);}
 #define CLRBIT(bb, b) (bb &= ClearMask[(b)])
 #define SETBIT(bb, b) (bb |= SetMask[(b)])
 
+// Macro for sq64 to sq120 Conversion
 #define SQ64(sq120) (SQ120toSQ64[(sq120)])
 #define SQ120(sq64) (SQ64toSQ120[(sq64)])
 
+// Boolean Arrays
 #define IsKn(p) IsKnight[p]
 #define IsBQ(p) IsBishopQueen[p]
 #define IsRQ(p) IsRookQueen[p]
 #define IsKi(p) IsKing[p]
 
+// Random Key Generator (ULONGLONG)
 #define RAND_64 (   (U64)rand() |       \
                     (U64)rand() << 15 | \
                     (U64)rand() << 30 | \

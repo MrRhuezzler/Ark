@@ -10,7 +10,7 @@ int popBit(U64 *bb){
     }
 }
 
-// Counts the number of 1 bits
+// Counts the number of 1 in the bitmap
 int countBit(U64 bb){
     int count = 0;
     for(int i = 0; i < 64; i++){
@@ -21,7 +21,7 @@ int countBit(U64 bb){
     return count;
 }
 
-// Prints the bitboard 
+// Prints the bitboard to the console
 void printBitBoard(U64 bb){
     printf("\n\n");
 
