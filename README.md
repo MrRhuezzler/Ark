@@ -7,6 +7,9 @@ Status           : :white_check_mark: (Working)
 
 Inspired by Bluefever !
 
+## Demonstration
+![CHESS_GIF](/Resources/Chess.gif)
+
 - ## Progress :
     - [X] Board Representation
     - [X] FEN Parser
