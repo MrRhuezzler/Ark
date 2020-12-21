@@ -7,7 +7,7 @@ Status           : :white_check_mark: (Working)
 
 Inspired by Bluefever !
 
-## Demonstration
+## Ark Mating me in 4 moves as Black
 ![CHESS_GIF](/Resources/Chess.gif)
 
 - ## Progress :
