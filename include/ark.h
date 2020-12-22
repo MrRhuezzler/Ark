@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <io.h>
+#include <fcntl.h>
 
 
 /* Local Header */
@@ -108,6 +110,8 @@ extern char RankChars[];
 extern char FileChars[];
 extern char PieceChars[];
 extern char SideChars[];
+extern char NotationChars[];
+extern wchar_t WCharPieces[];
 
 // Boolean Array to find which type of piece is it
 extern int PieceBig[13];
@@ -146,9 +150,11 @@ extern int parseFen(const char *fen, S_BOARD *board);
 extern void printBoard(const S_BOARD *board);
 extern void UpdateListsMaterial(S_BOARD *board);
 extern int CheckBoard(const S_BOARD *board);
+void printBoardOnly(const S_BOARD* board);
 
 // attack.c
 extern int isSqAttacked(const int sq, const int side, const S_BOARD *board);
+extern int isSqDoublePiece(const int gpiece, const int g_sq, const int sq, const S_BOARD *board);
 
 // io.c
 extern void SqAt(const int side, const S_BOARD *board);
@@ -156,6 +162,7 @@ extern char * PrSq(const int sq);
 extern char * PrMove(const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
 extern int ParseInputMove(char *input, S_BOARD *board);
+extern char * HNPrMove(const int move, S_BOARD *board);
 
 // validate.c
 extern int SqOnBoard(const int sq);

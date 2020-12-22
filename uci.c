@@ -107,13 +107,14 @@ void ParsePos(char* lineIn, S_BOARD* board) {
 	printBoard(board);
 }
 
-#ifdef BETA
-// Beta Feature
-void matein3(S_BOARD *board, S_SEARCHINFO *info){
+void matein_(S_BOARD *board, S_SEARCHINFO *info, int mate_moves){
 
 	FILE *fp;
 
-	fp = fopen("MateIn3.txt", "r");
+	char filename[100];
+	sprintf(filename, "MateIn%d.txt", mate_moves);
+
+	fp = fopen(filename, "r");
 
 	if(fp == NULL){
 		printf("Couldn't find the problem sheet\n");
@@ -122,7 +123,7 @@ void matein3(S_BOARD *board, S_SEARCHINFO *info){
 
 	char buffer[250];
 	char fenstr[250];
-	char choice[50];
+	int choice;
 
 	do{
 		for(int i = 0; i < 3; i++){
@@ -130,29 +131,73 @@ void matein3(S_BOARD *board, S_SEARCHINFO *info){
 			{
 			case 0:
 				fgets(buffer, 250, fp);
-				printf("Game : %s", buffer);
+				printf("\nGame : %s", buffer);
 				break;
 			case 1:
 				fgets(fenstr, 250, fp);
+				printf("FEN : %s", fenstr);
 				break;
 			case 2:
 				fgets(buffer, 250, fp);
-				printf("BestMoves : %s", buffer);
+				printf("BestMoves : %s\n", buffer);
 				break;
 			}
 		}
 
-		parseFen(fenstr, board);
-		printBoard(board);
-		info->depth = 4;
-		SearchPosition(board, info);
-		printf("Enter \"quit\" to Quit : ");
-		scanf("%s", &choice);
+		for(int i = 0; i < 2; i++){
+			fgets(buffer, 250, fp);
+		}
 
-	}while ((strcpy(choice, "quit") != 0) && (!feof(fp)));
+		printf("Enter 1 to Skip : ");
+		scanf("%d", &choice);
+		if(choice == 1) continue;
+
+		parseFen(fenstr, board);
+		printBoardOnly(board);
+		
+		if (mate_moves >= 4) {
+			info->depth = 8;
+		}
+		else {
+			info->depth = mate_moves * 2;
+		}
+
+		SearchPosition(board, info);
+
+		int total = GetPvLine(board, info->depth);
+        printf("Moves : ");
+		char * moveNotation;
+		int moveNumber = 1;
+		
+		if(board->side == BLACK){
+			printf("%d... ", moveNumber++);
+		}
+
+        for(int i = 0; i < total; ++i){
+			if(board->side == WHITE){
+				printf("%d. ", moveNumber++);
+			}
+			moveNotation = HNPrMove(board->pvArray[i], board);
+			for(int i = 0; i < 8; i++){
+				if(moveNotation[i] != '\0'){
+					printf("%c", moveNotation[i]);
+				}
+			}
+			printf(" ");
+        }
+
+		while(total--){
+			TakeMove(board);
+		}
+
+        printf("\n");
+
+		printf("Enter 1 to Continue : ");
+		scanf("%d", &choice);
+
+	}while((choice == 1) && (!feof(fp)));
 
 }
-#endif
 
 void UCILoop() {
 	
@@ -203,8 +248,12 @@ void UCILoop() {
 			break;
 		}
 		#ifdef BETA
-		else if(!strncmp(line, "matein3", 7)){
-			matein3(board, info);
+		else if(!strncmp(line, "analysis", 7)){
+			int mate_moves;
+			printf("Mate in : ");
+			scanf("%d", &mate_moves);
+
+			matein_(board, info, mate_moves);
 		}
 		#endif
 		if (info->quit) {

@@ -93,3 +93,53 @@ int ParseInputMove(char *input, S_BOARD *board){
     return NOMOVE;
 
 }
+
+
+char * HNPrMove(const int move, S_BOARD *board){
+
+    static char HNStr[8];
+
+    int to = TOSQ(move);
+    int from = FROSQ(move);
+    int piece = board->pieces[from];
+
+    HNStr[0] = NotationChars[piece];
+    
+    if(CAPTURED(move)){
+        HNStr[3] = 'x';
+        if (piece == wP || piece == bP) {
+            HNStr[0] = FileChars[FilesBrd[from]];
+        }
+    }else{
+        HNStr[3] = '\0';
+    }
+
+    HNStr[4] = FileChars[FilesBrd[to]];
+    HNStr[5] = RankChars[RanksBrd[to]];
+
+    if(PROMOTION(move)){
+        HNStr[6] = NotationChars[PROMOTION(move)];
+    }else{
+        HNStr[6] = '\0';
+    }
+
+    if(isSqDoublePiece(piece, from, to, board)){
+        HNStr[1] = FileChars[FilesBrd[from]];
+        HNStr[2] = RankChars[RanksBrd[from]];
+    }else{
+        HNStr[1] = '\0';
+        HNStr[2] = '\0';
+    }
+
+    MakeMove(board, move);
+
+    if(isSqAttacked(board->kingSq[board->side], board->side ^ 1, board)){
+        HNStr[7] = '+';
+    }else{
+        HNStr[7] = '\0';
+    }
+
+
+    return HNStr;
+
+}

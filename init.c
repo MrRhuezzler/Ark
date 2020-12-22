@@ -11,9 +11,11 @@ U64 sideKey;
 U64 castlePemKey[16];
 
 char PieceChars[]  = ".PNBRQKpnbrqk";
-char FileChars[]  = "ABCDEFGH";
+char FileChars[]  = "abcdefgh";
 char RankChars[] = "12345678";
 char SideChars[]  = "WB-";
+char NotationChars[] = ". NBRQK NBRQK";
+wchar_t WCharPieces[] = {' ', 0x265F, 0x265E, 0x265D, 0x265C, 0x265B, 0x265A, 0x2659, 0x2658, 0x2657, 0x2656, 0x2655, 0x2654};
 
 int PieceBig[13] = {FALSE, FALSE,  TRUE,  TRUE, TRUE, TRUE,   TRUE, FALSE,  TRUE,  TRUE, TRUE, TRUE, TRUE};
 int PieceMaj[13] = {FALSE, FALSE, FALSE,FALSE, TRUE,  TRUE,   TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE};
@@ -96,6 +98,7 @@ void InitSQUARES(){
 }
 
 void Init(){
+    //_setmode(_fileno(stdout), _O_U16TEXT);
     InitSQUARES();
     InitBITMASKS();
     InitHASHKEYS();

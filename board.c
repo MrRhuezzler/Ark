@@ -329,3 +329,22 @@ void printBoard(const S_BOARD *board){
     printf("PosKey : %llX\n", board->posKey);
     printf("\n\n");
 }
+
+// Prints the board to the console
+void printBoardOnly(const S_BOARD* board) {
+
+    printf("GAME BOARD \n\n");
+
+    for (int rank = RANK_8; rank >= RANK_1; rank--) {
+        printf("%8c", RankChars[rank]);
+        for (int file = FILE_A; file <= FILE_H; file++) {
+            int piece = board->pieces[FR2SQ(file, rank)];
+            printf("%5c", PieceChars[piece]);
+        }
+        printf("\n\n");
+    }
+
+    printf("\n%8c", ' ');
+    for (int file = FILE_A; file <= FILE_H; file++) printf("%5c", FileChars[file]);
+    printf("\n");
+}
