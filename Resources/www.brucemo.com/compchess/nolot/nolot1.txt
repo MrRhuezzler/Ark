@@ -1,0 +1,177 @@
+From: mfb@cnam.cnam.fr (Marc-Francois Baudot)
+Newsgroups: rec.games.chess
+Subject: Pierre Nolot's solutions to the 11 positions
+Date: 29 Jul 1994 11:55:22 GMT
+Organization: Conservatoire National des Arts et Metiers, Paris, France
+Message-ID: <31aqna$5fs@sheckley.cnam.fr>
+
+Solutions to the 11 difficult tactical positions published in the chess
+mag Gambisco.
+
+Solutions, comments  and analysis by Pierre Nolot, published in the July issue
+of Gambisco
+
+# Position: 1
+# Move: W
+
+r...qb.k   Kasparov-Karpov, 20th game 1990
+.b....p.	26.Nxh6!! c3 (26... Rxh6!? is not sufficient:
+p..pr..p   27.Nxd6 Qh5 (best) 28.Rg5! Qxd1 29.Nf7+ Kg8 30.Nxh6+ Kh8
+...n....   31.Rxd1 c3 32.Nf7+ Kg8 33.Bg6! Nf4 34.Bxc3 Nxg6 35.Bxb4 Kxf7
+Pnp.N.N.   36.Rd7+ Kf6 37.Rxg6+ Kxg6 38.Rxb7 +-) 27.Nf5! cxb2 
+......RP   28.Qg4 Bc8 (if 28... g6!? 29.Kh2! wins : 29...Qd7 30.Nh4 Bc6
+.B...PP.   31.Nc5! dxc 32.Rxe6 Nf6 33.Nxg6+ Kg7 34.Qg5 Nbd5 35.Ne5 Kh8
+.B.QR.K.   36.Nxd7 +-) 29.Qh4+ Rh6 30.Nxh6 gxh6 31.Kh2! Qe5 32.Ng5 Qf6
+           33.Re8 Bf5 34.Qxh6 (pretty, but there was a mate in 6 : 
+34.Nf7+ Qxf7 35.Qxh6+ Bh7 36.Rxa8 Nf6 37.Rxf8 Qxf8 38.Qxf8+ Ng8
+39.Qg7#) 34...Qxh6 35.Nf7+ Kh7 36.Bxf5+ Qg6 37.Bxg6+ Kg7 38.Rxa8 Be7
+39.Rb8 a5 40.Be4+ Kxf7 41.Bxd5+ 1-0
+A very deep combimation, that Tasc R30 or Genius 2 running on a pentium would 
+take between a few months and a few years to find.
+The best Novag computer, the Diablo 68000, finds 26.Nxh6 after 7 months
+and a half (Pierre Nolot has let it run on the position for 14 months and one
+day, until a power failure stopped an analysis of over 80 000 000 000 nodes!)
+but for wrong reasons : it evaluates white's position as inferior and 
+thinks this move would enable it to draw.
+
+# Position: 2
+# Move: W
+
+r....rk.   Bronstein - Ljubojevic, Petropolis itz 1973
+pp.n.p.p      22.Rxc5!! Nxc5 23.Nf6+ Kh8 24.Qh4 Qb5+ (Now computers have 
+.nqP..p.   a problem here : they think there is perpetual check, but...)
+..b.P.B.   25.Ke3! wins 25... h5 26.Nxh5 Qxb3+ and Bronstein won in 41 moves.
+....NQ..   If black plays 26... d5+ 27.Bxd5 Qd3 28.Kf2 Ne4+ 29.Bxe4 Qd4+ 
+.B...P..   30.Kg2 Qxb2+ 31.Kh3 +-
+PP..K..P   The best programs should be able to find 25.Rxc5!! in a few weeks.
+..R.....
+
+# Position: 3
+# Move: W
+
+r..qk..r   Smaguine - Sahovic, Bienne 1990
+ppp.b.pp    White wins with a queen sac but black has several ways to defend
+..n.p...    12.Nxg5!! Bxd1 13.Nxe6 Qb8 14.Nxg7!! Kf8 15.Bh6! Bg4 16.0-0+
+...pP.n.    17.Kg8 17.Rf4 +-
+...P..b.    It should take between a few months and a few years for a program
+..PB.NN.    to find 12.Nxg5!!
+PP....PP
+R.BQK..R
+
+# Position: 4
+# Move: W
+
+r.b.kb.r   Bronstein - Kotov, candiates, Budapest 1950
+.p.n.ppp     10.Nxe6!! Qxe6 11.Nd5 Kd8 12.Bg4 Qe5 13.f4 Qxe4 (13...Qxb2
+p..ppn..   was stronger but not sufficient : 14.Bxd7 Bxd7 15.Rb1 Qa3
+......BB   16.Nxf6 Bb5 17.Qd4 Qc5 18.Rfd1 +-) 14.Bxd7 Bxd7 15.Nxf6 gxf6
+..qNP...   16.Bxf6+ Kc7 17.Bxh8 and Kotov resigned on move 27.
+..N.....   Tasc R30 (The King), the strongest program for this 
+PPP..PPP   kind of combination, would need a few weeks here.
+R..Q.RK.
+
+# Position: 5
+# Move: W
+
+r..qrb.k   Spassky - Petrossian, w ch (19), Moscow 1969 
+.p.b..p.      21.e5!! dxe5 22.Ne4! Nh5 23.Qg6!? (This is allright, but
+p..ppn.p   23.Qg4!! Nf4 24.Nf3 Qc7 25.Nh4 +- was even stronger) 23...exd4?
+........   24.Ng5 1-0
+...NP...   Although No program finds 21.e5!! after 8 days, this might well
+.BN.....   be the first of the 11 positions to be solved by computers in
+PPP...QP   reasonnable time... 
+.K...RR.
+Well... He sould have said : No program I have tested... as we now know!
+
+# Position: 6
+# Move: B
+
+rnbqk..r   Malaniouk - Ivantchouk, Moscow 1988
+.p...ppp      13... axb5!! offers a rook to keep the white queen out of 
+p.......   play. 14.Qxa8 Bd4 15.Nxd4 cxd4 16.Qxb8 0-0! 17.Ke1 Qh4
+.NpPp...   18.g3 Qf6 19.Bf4 g5? (Ivantchouk would have won much faster
+QPP.P.n.   had he found 19...d3!, a move he found during the analysis. 
+P....N..   Tasc R30 inds 19...d3! in 2 1/2 hours. But to find 13...axb5
+....KbPP   it would probably need a couple of centuries...) 20.Rc1 exf4
+R.B..B.R   21.Qxf4 Qd4 22.Rd1 bxc4 23.e5 Qc3+ 24.Rd2 Re8 25.Bxd3 cxd3
+           26.0-0 Nxe5 -+
+Last minute info from Pierre, 19...Bf5!! is even stronger than d3
+What does DT think about move 19 for black, and in how much time, asks Pierre.*
+
+# Position: 7
+# Move: W
+
+.r.bk..r   Todorovic - Tosic, Arandjelovac, 1993.
+..R..ppp    A nice exchange sacrifice to keep control of the 7th rank :
+p...p...   1.Rxd8+!! Rxd8 (if 1...Kxd8 2.Ra7! Qe2 3.Qd4+ e8 4.h3 Qe1+
+.b..P..q   5.Kh2 Rd8 6.Qc5 Qh4 7.Ba3 Rd7 8.Ra8+ Rd8 9.g3 1-0)
+....QP..   2.Ba3 Qe2 3.h3! Bd7 (better but still losing was 3...Qe1+
+....N...   4.Kh2 Qa5 5.Re7+ Kf8 6.Rd7+ Kg8 7.Bb4 Rxd7 8.Bxa5 +-)
+.B....PP   4.Nf5! Qd1+ 5.Kh2 f6 6.e5xf6 1-0
+...R..K.   Genius 2 does better than  the R30 on this one, but 
+           needs more than a month to find 1.Rxd8!! even on a 90 MHz
+           Pentium.
+
+# Position: 8
+# Move: W
+
+r...rbk.   Goufeld - Osnos, Koutaissi 1978
+ppq..ppp    After the obvious 24.Bxh7+!! you stil have to find the right
+..b.pB..   attacking moves as black has some serious defensive
+........   resources. 24...Kxh7 25.Qh5+ Kg8 26.Rd4! gxf6 27.Rg4+ Bg7
+......Q.   28.Qh6 Kf8 29.Rxg7! Rac8 (computers prefer 29...Be4 which
+.P.B...P   also loses after 30.Rg4+ Ke7 31.Rxe4 Rad8 32.c4 Qa5 33.Rae1+-)
+P.P..PP.   30.Qh7 b5 31.Rd1 Bd5 32.c4 bxc4 33bxc4 1-0.
+R..R..K.   It should take the best micros a few months to find 24.Bxh7+!!
+
+As Deep Thought found out, 26 ... gxf6 seems to be a mistake.
+More on that later, but this one is dubious now!
+
+
+# Position: 9
+# Move: W
+
+r....r.k   Weinstein - Elyoseph, Israel 1992
+....bppb     This one is really beautiful and should resist computers 
+..n.p..p   for quite a long time, maybe until next century?
+p.n.P...   1.Ng5!! hxg5 2.hxg5! Rac8 3.Nf6!! Nb8 (black can also 
+.p.p.BNP   try 3...gxf6, which loses if white play precisely : 4.gxf6
+...P.NP.   4...Rfe8 (best defense) 5.Qh5 Rg8 6.Rxc5! Bg6! 7.Qh4 Bxc5
+qP..QPB.   8.Be4 Ne7 9Kg2 Qd5 10.Bxd5+-)
+..RR..K.   4.Qh5 Bxf6 5.gxf6 gxf6 6.Rxc5 Rxc5 7.Be4 f5 8.Kg2 Rg8 9.Rh1
+           9...Rg7 10.Bh6 Nd7 11.Bxg7+ Kxg7 12.Qxh7+ 1-0
+In fact, Pierre is not sure this one is 100% correct. Any improvements
+are wellcome!
+
+# Position: 10
+# Move: W
+
+r.b..rk.   Van der Wiel - Ribli Amsterdam 1980.
+.p.nbppp     Ribli is a solid player, but he didn't see this one
+pq.p....   coming :
+...B....   15.Rxf7!! Rxf7 16.Bxf7 Kxf7 17.Qh5+ Kg8 16.Qe8+ Bf8 
+P..NP...   19.Nd5 Qxd4 20.Nxe7+ Kh8 21.Rf1 Qf6 22.Rxf6 and white on
+..N.p...   on move 29.
+.PP...PP   This is propably  the easiest one, with number 5.
+R..Q.R.K
+
+# Position: 11
+# Move: W
+
+r.b...k.   Teichmann - NN, Zurich 1920
+p..p.nP.     This was a trap, as the game was spectacularly won because
+..pqr.Rp   of black's weak play. Several authors have published this game
+.p..p..P   without checking anything. For instance, Neishtadt in his
+..B.PnQ.   excellent book "Lecons de tactique" (sorry, I don't know
+.P......   the title of the english version) gives :
+P.PP....   "1.Rxh6!! the g pawn will be helped by the h pawn 1...Nxh6
+.K....R.    (1...Rxh6 2.Bxf7+ Rxf7 3.g8Q+) 2.Qg5 Nf7 3.Qd8+!! Nxd8
+            4.h6 and there is nothing to prevent h6-h7+ 1-0"
+Right, nothing can prevent h6-h7+, but it is not decisive!
+4...Qd4!! 5.h7+ Kf7 6.g8Q+ Ke7 7.h8Q Kd6 8.Rg7 Qxd2!! 9.Qxd8 Rc5
+10.Rxd7 Bxd7 11.Qxa8 Rb4 12.Qxa7 Qe1 13.Kb2 Qc3 1/2 as white cannot
+escape the black checks.
+
+
+
+Marc-Francois Baudot.

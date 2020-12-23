@@ -1,0 +1,98 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Search Instability</title>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="extensions.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="0x88.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/instability.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Search Instability"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>Without this, life would be fun</h1>
+<p>Search instability is when you search a position twice and get contradictory 
+values.&nbsp; For instance, you could search a position and get a return value 
+of 8, and search it again and get a return value of 10.</p>
+<p>Search instability is something that happens when you try to write a program 
+that is strong, as opposed to one that is &quot;correct&quot; and weak.&nbsp; There are many causes 
+of instability, and I will discuss how various search enhancements can lead to 
+instability, when I discuss those enhancements.&nbsp; A few other search 
+techniques must take into account the possibility of instability.</p>
+<p><b>You can never assume that you'll get the same value back when you search a 
+position twice.</b></p>
+<p>Fact is, a lot of the things that make a chess program fast or strong do 
+sleazy things that result in searches returning slightly different values when 
+called for a second time, and if you aren't expecting the values you get, 
+you can crash or have a bug that might make your program play a dumb move.</p>
+<p>Some chess programmers can't handle the idea of search instability, and they 
+are willing to let very good search techniques go in order to avoid it, or in 
+order to think that they are avoiding it.</p>
+<p>I wish it was possible to get rid of it completely, but as long as certain 
+very basic techniques are used, it will be a problem.&nbsp; I think that the 
+solution is to defend against crashes and bad behavior, then try to put it out 
+of your mind.</p>
+
+<p>If you are completely confused now, and want to see an example of how 
+instability could happen, check out the article on
+<a href="hashing.htm#instability">hashing</a>.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+
+
+</html>

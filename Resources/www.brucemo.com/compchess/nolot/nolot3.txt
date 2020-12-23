@@ -1,0 +1,195 @@
+From: mfb@cnam.cnam.fr (Marc-Francois Baudot)
+Newsgroups: rec.games.chess
+Subject: Re: Nolot's 11 difficult positions (possible spoilers)
+Date: 29 Jul 1994 11:44:00 GMT
+Organization: Conservatoire National des Arts et Metiers, Paris, France
+
+fhh@watson.ibm.com (Feng-Hsiung Hsu) writes:
+
+>Sometime ago, the following 11 positions collected by Pierre Nolot were
+>posted to rgc.  Pierre claimed that no computers can solve any of them
+>in reasonable time (and no micros in even a few weeks).  A long while back, he
+>might be right.  At this point, a few of them are solvable even under
+>tournament time control.  The ones that we tried overnight are all solvable
+>in a few hours.  DT-2 was searching around 3 million nodes/sec during the
+>runs.  The time probably would be reduced by 5-30 times for the harder
+>problems if the machine has a better quiescence search.
+
+I just phoned Pierre, and he admits he is very impressed by DT-2'sresults!
+So am I, and we thank you for the time you have spent on these positions.
+I'll post the solutions according to Pierre as given in Gambisco 
+separately, but first I'll just give you his comments on DT's outstanding
+results (much much better than the best micros)
+
+
+>1 ;r3;q;b1;k/1;b4;p1/;p2;p;r2;p/3;n4/p;n;p1n1n1/6rp/1b3pp1/1b1qr1k1/40
+
+>Source: Kasparov-Karpov, Lyon 1990.
+
+>Kasparov played Nh6 here.  DT-2 agreed with Kasparov's analysis after
+>going down the line given in Informant, but could not find the move
+>on its own in one hour time.  When letting it run overnight, it produced
+>Nh6 after 8 hours (but would play it with a 6 hours/move time control; that
+>is, it got first indication that the combination might work after about 6
+>hours), with the variation 1. Nh6! c3 2. Nf5 cb2 3. Qg4 ... which wins for
+>white.
+
+Very good. This is not an easy one!
+
+>2 ;r4;r;k1/;p;p1;n1;p1;p/1;n;qP2;p1/2;b1p1b1/4nq2/1b3p2/pp2k2p/2r5/40
+
+>Source: Bronstein-Ljubojevic, Petropolis 1973.
+
+>Solution is 1. Rc5! Nc5 2. Nf6 Kh8 3. Qh4...  Solved under tournament
+>time control (3 minutes/move, plus extra time if the value for the move
+>is unstable).  Plays it after 2 minutes.  Actually spent 4.5 minutes before
+>the value stabilized to about a piece up.
+
+Excellent!! and this is not supposed to be an easy one. Your score proves
+you found it for the good reasons.
+
+>3 ;r2;q;k2;r/;p;p;p1;b1;p;p/2;n1;p3/3;pp1;n1/3p2;b1/2pb1nn1/pp4pp/r1bqk2r/40
+>Source: Smagin-Sahovic, Biel 1990.
+
+>Solution move is 1. Ng5!.  Verified that the move is sound by following
+>the published analysis, but could not play it within one hour time.  This
+>is more a positional sac than what would be normally called tactics.
+
+Well, Pierre still calls it tactics!
+
+>4 ;r1;b1;k;b1;r/1;p1;n1;p;p;p/;p2;p;p;n2/6bb/2;qnp3/2n5/ppp2ppp/r2q1rk1/40
+>Source: Keres-Kotov, Budapest 1950.
+
+>Solution: 1. Ne6 Qe6 2. Nd5 Kd8 3. Bg4.  Plays it after 3.8 hours, would play
+>it under 2.5 hour/move time control.
+
+Very good!
+
+>5 ;r2;q;r;b1;k/1;p1;b2;p1/;p2;p;p;n1;p/8/3np3/1bn5/ppp3qp/1k3rr1/40
+>Source: Spassky-Petrosian, Moskow 1969.
+
+>Took 4 hours to find e5!.  1. e5! de5 2. Ne4 Nh5 3. Qg6...  More than a
+>piece up.  The minimum time control needed to play it is around 2 hours/move.
+Very good, but 3.Qg4 is even stronger (spassky played Qg6)
+Hiarcs also finds this one, and also gives 3Qg6
+
+>6 ;r;n;b;q;k2;r/1;p3;p;p;p/;p7/1n;pp;p3/qpp1p1;n1/p4n2/4k;bpp/r1b2b1r/41
+>Source: Melaniuk-Ivanchuk, USSR 1988.
+
+>Ivanchuk played 1. ... ab5! which appears to be a sound positional sacrifice.
+>Calling this position a tactical one, however, is a little unfair on Pierre's
+>part.  Ivanchuk, by the way, could not find the best continuations over the
+>board, but won it anyway due to Melaniuk's inaccurate defence.  Could not
+>solve it in one hour.  Probably a home preparation.  The same move was
+>replayed 3 years later in some random tournament.
+
+All this is perfectly right, except that Pierre still thinks this is tactics.
+Very deep tactics.
+
+>7 1;r1;b;k2;r/2r2;p;p;p/;p3;p3/1;b2p2;q/4qp2/4n3/1b4pp/3r2k1/40
+
+>8  - R - B K * - R 
+>7  * - r - * P P P 
+>6  P * - * P * - * 
+>5  * B * - p - * Q 
+>4  - * - * q p - * 
+>3  * - * - n - * - 
+>2  - b - * - * p p 
+>1  * - * r * - k - 
+
+>   a b c d e f g h
+
+>Source: unknown.
+
+>This one we left the machine ran overnight.  It found that 1. Rd8! wins.
+>1. Rd8! Kd8 2. Ra7 and if 2. ... Qe2 3. Qd4 Ke8 4. h3...  Took 12 hours
+>to get the value back, but would have played it if the time control
+>is 6 hours/move.
+
+>8 ;r3;r;b;k1/;p;p;q2;p;p;p/2;b1;pb2/8/6q1/1p1b3p/p1p2pp1/r2r2k1/40
+
+>White to move
+
+>8  R * - * R B K * 
+>7  P P Q - * P P P 
+>6  - * B * P b - * 
+>5  * - * - * - * - 
+>4  - * - * - * q * 
+>3  * p * b * - * p 
+>2  p * p * - p p * 
+>1  r - * r * - k - 
+
+>   a b c d e f g h
+
+>Source: Gufeld-Osnos, USSR 1978.
+
+>The move played was 1. Bh7, but as it turns out 1. Bh7 might not be the
+>best move.  Osnos defended poorly and got slaughtered.  With best black
+>defence, white only maintains a positional edge after 1. Bh7 Kh7 2. Qh5
+>Kg8 3. Rd4 Bf3! (with the idea of Qxc2, and then Q to king side to defend
+>the king).  DT-2 prefers to play c4, which threatens Bh7 for real.
+
+>9 ;r4;r1;k/4;b;p;p;b/2;n1;p2;p/;p1;n1p3/1;p1;p1bnp/3p1np1/;qp2qpb1/2rr2k1/40
+
+>White to move
+
+>8  R * - * - R - K 
+>7  * - * - B P P B 
+>6  - * N * P * - P 
+>5  P - N - p - * - 
+>4  - P - P - b n p 
+>3  * - * p * n p - 
+>2  Q p - * q p b * 
+>1  * - r r * - k - 
+
+>   a b c d e f g h
+
+>Source: unknown.
+
+>After 9 minutes, it played 1. Nf6, expecting 1. ... Rfc8 2. Nh7 Kh7 3. Ra1 ...
+>The score was slightly nagative for white.  On longer searches, it went up
+>to half a pawn and creeping up.
+
+>10 ;r1;b2;r;k1/1;p1;n;b;p;p;p/;p;q1;p4/3b4/p2np3/2n1;p3/1pp3pp/r2q1r1k/40
+
+>White to move
+
+>8  R * B * - R K * 
+>7  * P * N B P P P 
+>6  P Q - P - * - * 
+>5  * - * b * - * - 
+>4  p * - n p * - * 
+>3  * - n - P - * - 
+>2  - p p * - * p p 
+>1  r - * q * r * k 
+
+>   a b c d e f g h
+
+>Source: Van der Wiel-Ribli, Amsterdam 1980.
+
+>Solution is 1. Rf7 Rf7 2. Bf7 Kf7 3. Qh5.  Plays it in less than 2 minutes,
+>score stablized within 5 minutes to a pawn plus.
+
+>11 ;r1;b3;k1/;p2;p1;np1/2;p;q;r1r;p/1;p2;p2p/2b1p;nq1/1p6/p1pp4/1k4r1/40
+
+>White to move
+
+>8  R * B * - * K * 
+>7  P - * P * N p - 
+>6  - * P Q R * r P 
+>5  * P * - P - * p 
+>4  - * b * p N q * 
+>3  * p * - * - * - 
+>2  p * p p - * - * 
+>1  * k * - * - r - 
+
+>   a b c d e f g h
+
+>Source: unknown
+
+>Be6 appears somewhat worse for white, but 1. Rh6 Nh6 2. Qg5 Nf7 3. Qd8 appears
+>to be a repetition draw or slightly ahead for white.  Plays 1. Rh6 after
+>5 minutes, thought white was slightly ahead, but going down the line, it
+>appeared that black had enough pressure for a draw.
+
+

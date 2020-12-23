@@ -1,0 +1,162 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Checkmate/Stalemate Scoring</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="aspiration.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="contempt.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/matescore.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Checkmate/Stalemate Scoring"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>Checkmate and stalemate can be handled by an evaluation function, but it's 
+more typical to handle them in the search.</p>
+<p>Alpha-beta search collects checkmate/stalemate information about every node 
+it traverses for free.</p>
+<p>If it turns out that there are no successors of the node being processed, the 
+result is either checkmate or stalemate.&nbsp; It's easy to tell them apart -- 
+if there are no legal moves here, and the side to move is in check, it's 
+checkmate.&nbsp; Otherwise, it's stalemate.</p>
+<p>Now that the simple stuff is out of the way, the question is what score to 
+return when one of these conditions is detected.</p>
+<p>Stalemate is typically handled via the <a href="contempt.htm">contempt factor</a>.&nbsp; 
+I don't feel the need to discuss this further, and the only reason I'm 
+discussing it here at all is that it's detected at the same time as checkmate is 
+detected.&nbsp; Checkmate is the important issue here.</p>
+<p>Checkmate is more complicated.&nbsp; It is easy to suggest that you should 
+return some very large constant negative number if the side to move is 
+checkmated, but this overlooks an important consideration.</p>
+<p>It is desirable that the fastest mate be chosen, if there are several to 
+choose from, as there often are.&nbsp; If all mates are scored the same, whether 
+or not the quickest one is chosen is left to random chance, and Murphy's Law 
+being what it is, often you'll watch a program with this &quot;feature&quot; repeatedly 
+threaten mate in one, but never actually give mate.</p>
+<p>This is very embarrassing if you are the programmer, and a laugh riot if you 
+aren't.</p>
+<p>The way to solve this is to give a larger negative score if the side to move 
+is mated closer to the root of the tree.&nbsp; This will cause the winning side 
+to try to checkmate faster, and the losing side to stay alive as long as 
+possible, which is usually considered better play.</p>
+<p>It can be a little complicated to implement this, because you end up having 
+to keep track of how far you are from the root of the search.&nbsp; This is not 
+normally an interesting or necessary thing to keep track of -- you are usually 
+much more interested in the amount of depth <i>under</i> this node, not the 
+length of the line <i>above</i> this node.</p>
+<p>You have to handle this somehow.&nbsp; Here is an obvious, but not terribly 
+efficient, means of handling this, in the context of a normal alpha-beta search:</p>
+<p class="c-code">int AlphaBeta(int depth, int alpha, int beta<span class="highlit-code">, 
+int mate</span>)<br>
+{</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp; int legal = 0;</span></p>
+<p class="c-code"><br>
+&nbsp;&nbsp;&nbsp; if (depth == 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();<br>
+&nbsp;&nbsp;&nbsp; GenerateLegalMoves();<br>
+&nbsp;&nbsp;&nbsp; while (MovesLeft()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -AlphaBeta(depth - 1, -beta, 
+-alpha<span class="highlit-code">,</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+mate - 1</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt;= beta)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return beta;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alpha = val;</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+legal++;<br>
+</span>&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp; if (!legal) {</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+if (!InCheck())&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+// Stalemate.</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return Contempt();</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return -mate;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+// Checkmate.</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp; }<br>
+</span>&nbsp;&nbsp;&nbsp; return alpha;<br>
+}</p>
+<p>You'd call this routine with, for instance:</p>
+<p class="c-code">val = AlphaBeta(8, -INFINITY, INFINITY, MATE);</p>
+<p>&quot;MATE&quot; is in this case a constant with a large positive value, larger than 
+any score created by summing material and positional factors could be.</p>
+<p>In order to make sense out of mate scores returned by this, you have to do 
+some math on the return value in order to figure out if it's mate in 2 or 
+whatever.&nbsp; An example based on the above:</p>
+<p class="c-code">if (val &gt;= MATE - 1000) // Handle up to mate in 500 or so.</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; printf(&quot;Mate in %d\n&quot;, (MATE - val + 1) / 
+2);</p>
+<p class="c-code">else if (val &lt;= -MATE + 1000)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; printf(&quot;Mated in %d\n&quot;, (MATE + val) / 2);</p>
+<p>That's a little tricky because it assumes integer division.&nbsp; The code 
+will print &quot;Mate in 1&quot; if the side to move can checkmate on its first move, and 
+&quot;Mated in 0&quot; if the side to move is checkmated now.<br>
+&nbsp;</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+12/27/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

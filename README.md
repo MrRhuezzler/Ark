@@ -1,4 +1,4 @@
-![ARK](/Resources/header.png)
+![ARK](/images/header.png)
 ---
 Author           : [MrRhuezzler](https://github.com/MrRhuezzler)  
 Project Language : C  
@@ -8,7 +8,7 @@ Status           : :white_check_mark: (Working)
 Inspired by Bluefever !
 
 ## Ark Mating me in 4 moves as Black
-![CHESS_GIF](/Resources/Chess.gif)
+![CHESS_GIF](/images/Chess.gif)
 
 - ## Progress :
     - [X] Board Representation
@@ -28,7 +28,7 @@ Inspired by Bluefever !
 ## Details
 
 ### Board Representation
-![ChessBoardRepresentation](/Resources/ChessBoardRep.jpg)
+![ChessBoardRepresentation](/images/ChessBoardRep.jpg)
 
 ### Forsyth–Edwards Notation (FEN) String 
 A FEN String is a way to encode a chess position in a single string.  

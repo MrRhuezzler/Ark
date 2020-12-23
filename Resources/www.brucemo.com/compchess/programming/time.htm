@@ -1,0 +1,132 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Time Allocation</title>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="pondering.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="glossary.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/time.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Time Allocation"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>Time allocation is important, because if you spend more time at appropriate 
+moments, it is like having a faster processor at those moments, and having a 
+faster processor is a good thing.</p>
+<p>I'm not going to go into a lot of detail here, because I don't think a lot is 
+warranted.&nbsp; I think that if I just mention a few things, people can get a 
+few ideas about how to handle this problem.</p>
+<h1>General considerations</h1>
+<p>All commonly used time controls allow you to decide if you want to spend more 
+time on this move, or save it up for later.&nbsp; I think that it makes most 
+sense to spend a little more time now, rather than saving it up, because you'd 
+feel pretty silly if you achieved a lost position with 75% of your time left.</p>
+<p>Another obvious suggestion is that the program think especially long the 
+first few moves out of <a href="glossary.htm#book">book</a>.&nbsp; Very often a program will come out of book in 
+a position it doesn't understand very well, and the hope is that giving it an 
+extra dose of time in these cases might prevent it from making an immediate 
+decisive error.</p>
+<p>Another place to add time is when the program is 
+<a href="glossary.htm#fail-low">failing low</a>.&nbsp; If you've 
+thought for several minutes about a position, and suddenly the score starts to 
+drops for the move you plan to make, you don't want to make this move just because you've run out 
+of time.&nbsp; Spending more time, in order to try to find a better move, seems 
+to make a lot of sense.</p>
+<p>Sometimes you might want to subtract time.&nbsp; Some programs instantly move 
+once they find that they are checkmating the opponent.&nbsp; Other times you 
+might want to move more quickly if you are making an obvious recapture.</p>
+<h1>Tournament time control</h1>
+<p>The traditional tournament chess time control is X moves in Y minutes.&nbsp; 
+Some number of moves, typically 30 or 40, and some number of minutes, which can 
+be anything.&nbsp; A long club game might be 40 moves in 90 minutes.</p>
+<p>The most obvious stab at designing a time control system involves simply 
+dividing the time by the number of moves, and thinking for that amount of time 
+regardless.&nbsp; So, if you have 30 moves to make in 30 minutes, you think for 
+one minute each time.&nbsp; You can also keep some reserve time, or try to use 
+more time up front.</p>
+<p>It is very tricky to implement this properly.&nbsp; Is you sometimes make 
+instantaneous moves after <a href="pondering.htm">pondering</a>,&nbsp; you will 
+accumulate time.&nbsp; This saved time is used on subsequent moves, so if you 
+are not careful, you will spend more time thinking about later moves than you 
+did about earlier ones.&nbsp; If this is what you want, no problem, but this 
+doesn't sound right to me.&nbsp; I don't think that you want to spend five 
+minutes a piece on the last four moves until time control, if you spent one 
+minute each on the first four.</p>
+<h1>Sudden-death time control</h1>
+<p>A sudden-death time control can be handled by always considering that X moves 
+<i>always</i> remain until the time control.&nbsp; Let's say that you pick the number 30 as X.&nbsp; 
+You'll use about 1/30 of your remaining time on the first move.&nbsp; When it's 
+time to move again, you'll use 1/30 of the remaining time again.&nbsp; This 
+works rather well in practice.&nbsp; You move faster and faster as the game goes 
+on, which is probably what you should do anyway.</p>
+<p>So this is a lot easier to implement than the tournament time control logic.</p>
+<h1>Fischer time control</h1>
+<p>Fischer time control implementation is very tricky.&nbsp; In my own program, 
+I set a target time that I would like to &quot;hover&quot; around.&nbsp; If I'm above this 
+amount of time now, I'll use the full increment and then some.&nbsp; This will 
+cause me to drift toward the hover time.&nbsp; If I'm under the hover time, I 
+use less than the full increment, so my program will tend to slowly accumulate 
+time.</p>
+<p>The tricky parts are selecting a hover time that makes sense given the time 
+control, and creating a system that uses roughly the same amount of time per 
+move.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+
+
+</html>

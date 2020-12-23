@@ -1,0 +1,84 @@
+Newsgroups: rec.games.chess
+From: fhh@watson.ibm.com (Feng-Hsiung Hsu)
+Subject: A second look at the Nolot positions
+Message-ID: <CtwsIw.1H2G@hawnews.watson.ibm.com>
+Sender: fhh@watson.ibm.com
+Date: Tue, 2 Aug 1994 13:08:56 GMT
+Disclaimer: This posting represents the poster's views, not necessarily those of IBM.
+Organization: IBM T.J. Watson Research Center
+
+># Position: 3
+># Move: W
+>
+>r..qk..r   Smaguine - Sahovic, Bienne 1990
+>ppp.b.pp    White wins with a queen sac but black has several ways to defend
+>..n.p...    12.Nxg5!! Bxd1 13.Nxe6 Qb8 14.Nxg7!! Kf8 15.Bh6! Bg4 16.0-0+
+>...pP.n.    17.Kg8 17.Rf4 +-
+>...P..b.    It should take between a few months and a few years for a program
+>..PB.NN.    to find 12.Nxg5!!
+>PP....PP
+>R.BQK..R
+
+We took a closer look at this position.  12. Ng5 is a sound positional
+sac, but depending on the temperament of the player, it might not be
+the best move.  The published annotation gives 12. Bg5 Bg5 13. o-o as
++=, but white could play 13. h3 instead and white appears to have a simple
+positional squeeze.  The critical line in the 12. Ng5 variation turns out
+to be 12. Ng5 Bd1 13. Ne6 Qb8 14. Ng7 Kd8 15. Kd1.  Black's queen and rooks
+are temporarily out of play, black is up a pawn, but white has a protected
+passed pawn, and lots of pressure.  (The annotator gave one line that
+ended "with the attack":).  From DT-2's point of view, The Bg5 line was
+gaining 0.20 pawn after each iteration, and so was the Ng5 line.  Except
+that the Bg5 line has about a 0.20 pawn lead at the same depth.  There
+appears to be no kill in the Ng5 line when black king goes to d8
+instead of the f file.  Black would have to give up the extra pawn to
+activate the queen and the rooks, and while white is definitely better, black
+is not without counter play.  On the deepest search that we checked out,
+black's evaluation stopped dropping at around -1.4 pawns, and black's pieces
+were becoming active.
+
+># Position: 6
+># Move: B
+>
+>rnbqk..r   Malaniouk - Ivantchouk, Moscow 1988
+>.p...ppp      13... axb5!! offers a rook to keep the white queen out of 
+>p.......   play. 14.Qxa8 Bd4 15.Nxd4 cxd4 16.Qxb8 0-0! 17.Ke1 Qh4
+>.NpPp...   18.g3 Qf6 19.Bf4 g5? (Ivantchouk would have won much faster
+>QPP.P.n.   had he found 19...d3!, a move he found during the analysis. 
+>P....N..   Tasc R30 inds 19...d3! in 2 1/2 hours. But to find 13...axb5
+>....KbPP   it would probably need a couple of centuries...) 20.Rc1 exf4
+>R.B..B.R   21.Qxf4 Qd4 22.Rd1 bxc4 23.e5 Qc3+ 24.Rd2 Re8 25.Bxd3 cxd3
+>           26.0-0 Nxe5 -+
+>Last minute info from Pierre, 19...Bf5!! is even stronger than d3
+>What does DT think about move 19 for black, and in how much time, asks Pierre.*
+
+First, 19. ... Bf5 was played instantly (at 6 ply) by both DT-1 and DT-2,
+and within 30 seconds, both thought that black is winning big.
+
+A interesting line is instead of playing 17. Ke1 as in the game, playing
+17. c5!?.  Black's attack looks menacing, but there is no obvious win.
+
+13. ... ab5!! seems clearly the best move in the position, even though
+Ivanchuk did not see all the complications over the board, and we cannot
+establish that it necessarily wins.  It probably would tie down the
+machine for a few days to find the move.  Perhaps we will try it sometime
+later.
+
+># Position: 9
+># Move: W
+>
+>r....r.k   Weinstein - Elyoseph, Israel 1992
+>....bppb     This one is really beautiful and should resist computers 
+>..n.p..p   for quite a long time, maybe until next century?
+>p.n.P...   1.Ng5!! hxg5 2.hxg5! Rac8 3.Nf6!! Nb8 (black can also 
+>.p.p.BNP   try 3...gxf6, which loses if white play precisely : 4.gxf6
+>...P.NP.   4...Rfe8 (best defense) 5.Qh5 Rg8 6.Rxc5! Bg6! 7.Qh4 Bxc5
+>qP..QPB.   8.Be4 Ne7 9Kg2 Qd5 10.Bxd5+-)
+>..RR..K.   4.Qh5 Bxf6 5.gxf6 gxf6 6.Rxc5 Rxc5 7.Be4 f5 8.Kg2 Rg8 9.Rh1
+>           9...Rg7 10.Bh6 Nd7 11.Bxg7+ Kxg7 12.Qxh7+ 1-0
+>In fact, Pierre is not sure this one is 100% correct. Any improvements
+>are wellcome!
+
+It is not clear to us either whether 1. Ng5!? actually works.
+
+

@@ -1,0 +1,165 @@
+<html>
+
+<head>
+
+
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Programming Topics</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110">
+<meta name="Microsoft Border" content="tb">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="../ferret/index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="../index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="../nolot/index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/index.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Programming Topics"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>This page will contain links to a series of essays on computer chess topics, as I have 
+time to write them.&nbsp; The topics are oriented toward those who want to write 
+their own chess program, or understand how chess programs work.</p>
+
+<p>I do not mean to describe ever conceivable way of writing a chess program.&nbsp; 
+It is my intent to talk about common techniques, in some cases with a personal 
+perspective since I have implemented a lot of this stuff.</p>
+
+<p>As of this moment, I am writing all of this stuff off the top of my head.&nbsp; 
+There are a lot of people that need credit for these ideas, and in many cases I 
+don't know who to credit.&nbsp; I will figure this all out eventually and 
+provide some history when possible.&nbsp; I will also provide some amount of 
+experimental evidence in order to support some claims that I make.</p>
+
+<p>If you want a fully functional chess program, including source, you are free 
+to download my free chess program <a href="../gerbil/index.htm">Gerbil</a>, and 
+you can see practical examples of some of the techniques that I describe.</p>
+
+<ol type="I">
+  <li>Basic Search Techniques<ol type="A">
+    <li><a href="tree.htm">Search Tree Introduction</a></li>
+    <li><a href="minmax.htm">Min-Max Search</a></li>
+    <li type="A"><a href="alphabeta.htm">Alpha-Beta Search</a></li>
+    <li><a href="pvs.htm">Principal Variation Search</a></li>
+    <li type="A"><a href="quiescent.htm">Quiescent Search</a><ol>
+      <li><a href="quiescent.htm#MVVLVA">MVV/LVA Move Ordering</a></li>
+      <li><a href="quiescent.htm#SEE">Static Exchange Evaluation</a></li>
+    </ol>
+    </li>
+  </ol>
+  </li>
+  <li>Some Other Search-Related Topics<ol type="A">
+    <li><a href="pv.htm">Collecting the Principal Variation</a></li>
+    <li><a href="iterative.htm">Iterative Deepening</a></li>
+    <li><a href="aspiration.htm">Aspiration Windows</a></li>
+    <li><a href="matescore.htm">Checkmate/Stalemate Scoring</a></li>
+    <li><a href="contempt.htm">Contempt Factor</a></li>
+    <li>Fifty-Move Draw Detection</li>
+    <li>Hash Tables<ol>
+      <li><a href="zobrist.htm">Zobrist Keys</a></li>
+      <li><a href="hashing.htm">Transposition Table</a></li>
+      <li><a href="repetition.htm">Repetition Detection</a></li>
+      <li><a href="matehash.htm">Handling mate scores</a></li>
+    </ol>
+    </li>
+  </ol>
+  </li>
+  <li>Advanced Search Topics<ol type="A">
+    <li>Multiprocessor Search Techniques</li>
+    <li><a href="nullmove.htm">Null-Move Foward Pruning</a></li>
+    <li>Other Pruning Techniques</li>
+    <li><a href="extensions.htm">Search Extensions</a><ol>
+      <li><a href="extensions.htm#check">Check Extension</a></li>
+      <li><a href="extensions.htm#single">Single-Response Extension</a></li>
+      <li><a href="extensions.htm#recap">Recapture Extension</a></li>
+      <li><a href="extensions.htm#singular">Singular Extension</a></li>
+      <li><a href="extensions.htm#mate">Mate-Threat Extension</a></li>
+    </ol>
+    </li>
+    <li><a href="instability.htm">Search Instability</a></li>
+  </ol>
+  </li>
+  <li>Move Generation and Move Ordering<ol type="A">
+    <li>Move Generation Techniques<ol>
+      <li><a href="0x88.htm">0x88</a></li>
+      <li><a href="movetable.htm">Move Table</a></li>
+      <li>Bitboards</li>
+    </ol>
+    </li>
+    <li>Move Ordering<ol>
+      <li>Killer Moves</li>
+      <li>History Heuristic</li>
+    </ol>
+    </li>
+  </ol>
+  </li>
+  <li>Search Control<ol type="A">
+    <li><a href="pondering.htm">Pondering</a></li>
+    <li><a href="time.htm">Time Allocation</a></li>
+  </ol>
+  </li>
+  <li>Evaluation<ol type="A">
+    <li>Piece-Square Tables</li>
+    <li>Pawn Evaluation</li>
+    <li>King Safety Evaluation</li>
+    <li>Piece Evaluation</li>
+    <li>Endgame Databases</li>
+  </ol>
+  </li>
+  <li>Thoughts</li>
+</ol>
+
+<P align="center">
+<img src="counter/honesty-counter.gif" border="0"><br>
+<font size=-1>Free counters provided by <a href=http://www.andale.com>Andale</a>.<br></font></P>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

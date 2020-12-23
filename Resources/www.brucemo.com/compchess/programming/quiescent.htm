@@ -1,0 +1,226 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Quiescent Search</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="pvs.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="pv.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/quiescent.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Quiescent Search"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>Chess contains many forcing tactical sequences.&nbsp; If someone takes your 
+bishop with a knight, you'd better take their knight back.</p>
+<p>Alpha-beta search is not particularly tolerant of this kind of thing.&nbsp; 
+You pass a depth parameter to the function, and when the depth gets to zero, it 
+is done, even if someone's queen is hanging.</p>
+<p>A method of dealing with this is called &quot;quiescent search&quot;.&nbsp; When 
+alpha-beta runs out of depth, rather than calling &quot;Evaluate()&quot;, a quiescent 
+search function is called instead.&nbsp; This function evaluates the position, 
+while being careful to avoid overlooking extremely obvious tactical conditions.</p>
+<p>Essentially, a quiescent search is an evaluation function that takes into 
+account some dynamic possibilities.</p>
+<p>The classic quiescent search searches only captures.&nbsp; This causes a 
+problem because captures are not compulsory in chess.&nbsp; If a position is 
+even, but if the only capture available to you is QxP (losing a queen), you 
+aren't compelled to capture the pawn, and the quiescent search shouldn't be 
+forced to capture it either.</p>
+<p>Instead, the side to move is given a choice:&nbsp; make a capture or do 
+nothing.&nbsp; Some people refer to doing nothing as &quot;standing pat&quot;, a term 
+taken from poker, which means to go with the cards you have now rather than 
+discarding some and drawing replacements from the deck.</p>
+<p>Here's the code:</p>
+<p class="c-code">int Quies(int alpha, int beta)</p>
+<p class="c-code">{</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; val = Evaluate();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; if (val &gt;= beta)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return beta;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; if (val &gt; alpha)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alpha = val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; GenerateGoodCaptures();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; while (CapturesLeft()) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextCapture();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -Quies(-beta, 
+-alpha);</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt;= beta)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return beta;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+alpha = val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; return alpha;</p>
+<p class="c-code">}</p>
+<p>This looks very similar to <a href="alphabeta.htm">alpha-beta</a>, but the 
+differences are very important.&nbsp; The function calls the static evaluation, 
+and if the score is good enough that it can force a cutoff without captures 
+being attempted, a cutoff is immediately made (return beta).&nbsp; If the 
+evaluation isn't good enough to cause a cutoff, but it's better than alpha, 
+alpha is updated to reflect the static evaluation.</p>
+<p>Then the captures are tried, and if any of them causes a cutoff, the search 
+ends.&nbsp; Perhaps none of them is any good, which is also no problem.</p>
+<p>This function has several possible outcomes.&nbsp; It's possible that the 
+evaluation function will return a high enough score that the function can exit 
+immediately via a beta cutoff.&nbsp; It's also possible that a capture can 
+result in a beta cutoff.&nbsp; It's possible that the static evaluation will be 
+bad, and none of the captures will be any good either.&nbsp; Or it is possible 
+that none of the captures are any good, but the static evaluation can raise 
+alpha a little bit.</p>
+<p>Note that there is no &quot;depth&quot; parameter passed in to the quiescent search 
+function.&nbsp; Because of this, the search can go very deep if a liberal 
+definition of a &quot;good&quot; capture is applied, or if there is a long contentious 
+forced capture sequence.</p>
+<p>My example function doesn't detect checks, so it can't catch checkmates.&nbsp; 
+It is possible to make one that does by immediately asking if the side to move 
+is in check, and if so, instead of doing &quot;Evaluate()&quot;, and checking for a 
+cutoff, instead the function calls alpha-beta with a depth of one.&nbsp; For 
+example:</p>
+<p class="c-code">int Quies(int alpha, int beta)</p>
+<p class="c-code">{</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; if (InCheck())</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return AlphaBeta(1, 
+alpha, beta);</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; val = Evaluate();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; if (val &gt;= beta)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return beta;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; if (val &gt; alpha)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alpha = val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; GenerateGoodCaptures();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; while (CapturesLeft()) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextCapture();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -Quies(-beta, 
+-alpha);</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt;= beta)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return beta;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+alpha = val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; return alpha;</p>
+<p class="c-code">}</p>
+<p>This version will find mates in quiescence if they involve captures.&nbsp; 
+Which version to use is a matter of taste and testing.</p>
+<p>What to call a &quot;good&quot; capture is also a matter of taste and testing.&nbsp; If 
+you allow any capture, and search them in any old order, you'll destroy the 
+efficiency of your search and create a <i>quiescent search explosion</i>, which 
+will result in dramatically reduced depth and may cause a program crash.</p>
+<p>There are a couple of obvious was of trying to avoid a quiescent explosion.</p>
+<h1><a name="MVVLVA"></a>MVV/LVA</h1>
+<p>&quot;MVV/LVA&quot; stands for &quot;Most Valuable Victim/Least Valuable Attacker&quot;.&nbsp; 
+It's a move ordering technique that is designed to be applied very cheaply.&nbsp; 
+The idea is always to search the best capture first.&nbsp; This technique 
+assumes that the best capture will be the one that captures the biggest piece.&nbsp; 
+If more than one of your pieces can capture a big piece, the assumption is made 
+that it is best to capture with the smallest piece.</p>
+<p>What this means is that PxQ is going to come first (assuming king in check is 
+handled some other way).&nbsp; Next comes NxQ or BxQ, then RxQ, then QxQ, then 
+KxQ.&nbsp; Followng that is PxR, B/NxR, RxR, QxR, KxR, and so on.</p>
+<p>This works better than nothing, but it is obvious that there are some glaring 
+problems.&nbsp; RxR is searched before PxB, even if the rook is defended.</p>
+<p>MVV/LVA will solve the quiescent explosion problem, but it will leave you 
+with bloated quiescent search trees.</p>
+<p>The advantage of MVV/LVA is that this is easy to implement and it results in 
+a high nodes/second.&nbsp; The disadvantage is that your search is inefficient 
+-- you spend most of your time evaluating losing captures, so you search less 
+deeply.</p>
+<h1><a name="SEE"></a>SEE</h1>
+<p>&quot;SEE&quot; stands for &quot;Static Exchange Evaluation&quot;.&nbsp; It's much more 
+complicated than MVV/LVA, but allows for more accurate move ordering, and it 
+allows for some captures to be discarded.</p>
+<p>You can't discard QxP in MVV/LVA, because it's very possible that the pawn is 
+undefended, which would mean that QxP is a good move.&nbsp; Of course, if the 
+pawn is defended, I doubt that you gain anything significant by searching this 
+move at all.&nbsp; With a SEE, you can figure out if QxP is a losing capture, 
+and if so, either order the capture so that it is searched last, or simply prune 
+it.</p>
+<p>I don't have sample code for SEE yet, but how it works is that you apply a 
+routine that resolves the captures, and then order moves by the amount of 
+material that appears to be won.</p>
+<p>SEE allows you to prune &quot;bad&quot; capturing moves very drastically, without many 
+important captures being pruned out erroneously, and it improves move ordering.&nbsp; 
+Another thing you can do is prune out good captures, if they don't seem good 
+enough.&nbsp; If you are down a rook, a capture that wins a pawn is probably not 
+worth trying in quiescent search.</p>
+<p>I suspect that a program that uses SEE will be stronger than the same program 
+using MVV/LVA.&nbsp; The problem is writing the routine, and designing your data 
+structures so the routine can be efficient.</p>
+<h1>Quiescent search is not perfect</h1>
+<p>It is very possible and in fact very likely that quiescent search will make 
+mistakes.&nbsp; This is a sad reality, but at least it's happening way out at 
+the tips, where searches tend to be pretty stupid (a one-ply search is never 
+going to be very good), so perhaps this is not a big deal.</p>
+<p>If it were possible to make a more accurate quiescent search with no loss in 
+speed, I'm sure that a program would be stronger than it was before.&nbsp; 
+However, I think it's important to understand the tradeoff that is being made if 
+you try to make your quiescent search extremely powerful at the expense of time.&nbsp; 
+If making the quiescent search smarter costs you some number of plies of 
+full-width search, it may not be worth it to make it smarter.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+11/04/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

@@ -1,0 +1,6 @@
+
+.c-code      { font-family: courier new; margin-left: 72; margin-top: 0; margin-bottom: 0 }
+.inv-comment { font-size: 12pt; text-align: left; margin-left: 72; margin-top:0; margin-bottom:10 }
+.inv-price   { font-size: 14pt; text-align: right }
+.inv-head    { text-align: left; font-size: 14pt; margin-left: 36; margin-right: 0; margin-bottom:4 }
+span.highlit-code { color: #0000FF }

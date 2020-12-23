@@ -1,0 +1,211 @@
+<html>
+
+<head>
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Repetition Detection</title>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="hashing.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="matehash.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/repetition.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Repetition Detection"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>Why repetition detection is necessary</h1>
+<p>It's important to figure out the repetition draw problem.&nbsp; If a position 
+repeats three times with the same side to move, a draw can be claimed.&nbsp; 
+It's very bad if a program is ahead by a rook and gets into a situation where it 
+is cycling through a couple of checks forever.&nbsp; The opponent claims a draw 
+in a position that is easily winning.</p>
+<p>Solving this problem is a matter of detecting previously played played 
+positions and doing the appropriate thing.&nbsp; If a program understands 
+repetitions it can aim for them or avoid them as the board situation warrants.&nbsp; 
+A program can attempt to find a perpetual check if it is losing, and it can 
+avoid this situation if it is winning.</p>
+<h1>A fairly trivial choice before we start</h1>
+<p>There are two kinds of positions that can be repeated.&nbsp; <i>Game history 
+positions</i> are positions that have actually been played on the board, in the 
+game.&nbsp; <i>Tree positions</i> are positions that have occurred in the line 
+the program is now searching.&nbsp; They haven't been played on the board yet, 
+but the program has managed to think about undoing a move and playing it again.</p>
+<p>I think that it is clear that repetition of tree positions should be 
+immediately detected and handled.&nbsp; Traditionally, a draw score is returned 
+in these cases, but I have heard that some programs return a deliberately 
+positive score if there is a middlegame perpetual check, as long as the program 
+is doing the checking.&nbsp; This is supposed to reflect the idea that if you 
+find a perpetual check, there is often more.&nbsp; If repetitions within the 
+tree are not handled, the program will not see cases involving perpetual check 
+and other repetition draws.</p>
+<p>It's not as obvious what to do about positions that appear in both the tree 
+and game history.&nbsp; If a position has appeared twice in the game history, 
+and once in the tree, that can be treated as a draw, since if that position 
+appears on the board again it is a draw.&nbsp; The difficult case is a position 
+that has appeared once in the game and once in the tree.</p>
+<p>Many programs treat these positions as draws.&nbsp; This causes a program to 
+efficiently attempt to achieve a draw via repetition if it is in trouble and the 
+opponent wants to repeat.&nbsp; The down-side is that the program will sometimes 
+make unnatural moves.</p>
+<p>I have seen a couple of examples in actual play.&nbsp; One of them involved a 
+game between Gnuchess and my program.&nbsp; Gnuchess had a win in a K+P ending 
+and missed it, and the programs wandered off into a series of drawn positions.&nbsp; 
+Eventually, they wandered back to the position where Gnuchess missed a win.&nbsp; 
+My program was happy to repeat this position, because it scored it as a draw, 
+since it had already occurred in the game history.&nbsp; Of course, Gnuchess 
+found the win the second time through.</p>
+<p>Another game was between my program and a human master named Greg Kennedy.&nbsp; 
+Kennedy was up two pawns, but made a bad move that allowed a simple tactic such 
+as a knight fork, which won one of the pawns back.&nbsp; Kennedy saw that his 
+king was in check, and he had to move it.&nbsp; He moved it back to the square 
+that it had just been on.&nbsp; My program, rather than taking the pawn, 
+resulting in a position where it was a pawn down, decided instead to undo its 
+last move, leading to a repetition of the position two plies previous.&nbsp; Its 
+repetition cause it to &quot;expect&quot; that Kennedy would move his king back and let 
+the program fork him again.&nbsp; Of course he didn't, and he remained two pawns 
+up.</p>
+<p>It's possible to create many other hypothetical cases.&nbsp; A strong human 
+player has an overwhelming attack, but messes up and allows the program to 
+escape with its king, so all the human has now is a perpetual check, since he's 
+down material and has no mate.&nbsp; The program would happily move its king 
+right back into the situation it just escaped from, since those positions are 
+repetitions and are therefore considered draws.</p>
+<p>In my programs I have fixed this by ignoring positions that are repeated once 
+in the game history and once in the tree.&nbsp; This solves the problems 
+described above but it introduces some new problems.&nbsp; The program will repeat positions a couple of times, so sometimes it plays 
+very annoying chess, since it is not forced to at least <i>appear</i> to be 
+making progress.&nbsp; This might tend to bother human opponents, or 
+opposing operators at computer chess tournaments.&nbsp; It could also cost the 
+program wins, because when it gets into difficult endgame positions, it isn't 
+really forced to make progress, and could diddle around for a long time, while 
+getting closer and closer to the fifty-move limit.</p>
+<p>The choice of which system to use is a matter of taste.</p>
+<h1>Possible implementations</h1>
+<p>There are several ways that repetitions can be detected.&nbsp; One of them is 
+in use in Tom Kerrigan's TSCP, which he credits John Stanback for.&nbsp; The 
+comments in the code claims that it works, but there is no information about how 
+or why it works, so I don't know what it does.&nbsp; If you want to understand 
+it, you'll have to look in TSCP.</p>
+<p>Implementations that I can understand and explain involve
+<a href="zobrist.htm">Zobrist keys</a>.&nbsp; If you want to implement a
+<a href="hashing.htm">transposition hash table</a>, you'll have already 
+implemented Zobrist keys, so you already have them available.&nbsp; What you 
+need to do with these Zobrist keys is recognize that the key corresponding to 
+current position within a tree search is equal to they key corresponding to a 
+position further back in the game tree.</p>
+<p>One method of doing this involves maintaining a first-in last-out stack of 
+keys in the current line, plus keys from the game history.&nbsp; In order to 
+detect a repetition, the stack is iterated, and keys are compared, in order to 
+see if the current key is already in the stack.</p>
+<p>It is not necessary to go through the entire list, it's only necessary to go 
+backwards until a pawn move or a capture is encountered, since these moves lead 
+to irreversible changes in the game history.&nbsp; You can never have a 
+repetition of a position that occurred before the last capture or pawn move 
+made.</p>
+<p>This sounds like it would be expensive to do, and perhaps it is, but I 
+believe that some programs are doing it like this.</p>
+<p>Early on in my chess programming experience, I wrote a Usenet post about 
+hashing, and I received a response from Ken Thompson, author of Belle (amongst 
+many other achievements).&nbsp; He told me that he detected repetitions by using 
+the transposition hash table, as follows:</p>
+<p>The idea is to set an &quot;open&quot; flag in the position's transposition table 
+element when the hash table is probed.&nbsp; This flag stays set until the 
+position is no longer being searched, meaning when the search function returns a 
+value for that position.&nbsp; At any given time, the only nodes that are &quot;open&quot; 
+are nodes that are in the game history, or are in the current line in the tree 
+search, so if the hash table probe encounters an open node, it must be because 
+the current position has occurred somewhere before.</p>
+<p>This has the advantage that it uses data structures that are already present 
+in the typical chess program, but there are a few problems with this idea.&nbsp; 
+The hash table element must be written when a node is entered, so an &quot;<a href="hashing.htm#replacement">always 
+replace</a>&quot; scheme must be used.&nbsp; This isn't a problem for Thompson, since 
+his scheme involves using an &quot;always replace&quot; table, but other implementations 
+might not use this kind of replacement scheme.&nbsp; Another problem is that 
+there can be hash table entry collisions, and they must be dealt with.&nbsp; I 
+am not talking about hash key collisions which occur when two positions map to 
+the same 64-bit key, I'm talking about when two particular positions want to 
+share the same hash table element, which should be pretty common.&nbsp; If two 
+open nodes that want to share the same hash element, it's not immediately 
+obvious what to do, other than not detect repetitions on the second one.&nbsp; 
+Perhaps this problem could be dealt with via a re-hashing scheme, but this seems 
+like an annoying thing to add in order to support functionality that isn't 
+central to what the transposition table should be doing.&nbsp; A final problem 
+is that it is hard to figure out how to adapt this to a multiprocessor search 
+where there might be several search threads accessing the same hash table.&nbsp; 
+When an open node is encountered, it might not indicate a repetition at all, 
+since it could belong to a line being searched by another processor.&nbsp; This 
+problem sounds complicated to solve.</p>
+<p>A simpler scheme involves making a smaller hash table.&nbsp; When a node is 
+entered, the table is probed, if if the Zobrist key for the current position is 
+in the table, a draw score is returned.&nbsp; Otherwise, the key is added.&nbsp; 
+When the node is exited, the key is deleted.&nbsp; This is very straightforward, 
+and hash element collisions can be handled easily, since the table isn't full, 
+elements are managed in first-in last-out order, and there are no problems with 
+replacement scheme.</p>
+<p>I'm reluctant to say that this technique is better than the other, since the 
+other was devised by Ken Thompson.&nbsp; There are some problems with this 
+system, notably that it's an extra data structure and several extra functions 
+that need to be written to manipulate it.</p>
+<p>There are also some worries when a program is changed so that it can use a 
+multi-processor search, but the problems that happen don't seem any more serious 
+to me than the problems that are faced when a program that uses the Thompson 
+scheme is converted.</p>
+<p>If you want to see code for this secondary hash table scheme, check out
+<a href="../gerbil/index.htm">Gerbil</a>.&nbsp; I don't include a source-code 
+example here because it's rather implementation specific.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/16/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+
+
+</html>

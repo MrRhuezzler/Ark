@@ -1,0 +1,190 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Aspiration Windows</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="iterative.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="matescore.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/aspiration.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Aspiration Windows"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>An aspiration window is an enhancement to <a href="iterative.htm">iterative deepening</a>.&nbsp; The 
+simplest implementation of iterative deepening works as follows:</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">for (depth = 1;; 
+depth++) {</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+val = AlphaBeta(depth, -INFINITY, INFINITY);</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+if (TimedOut())</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+break;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">}</p>
+<p>Alpha-beta is called with a &quot;window&quot; of +/- INFINITY, presumably large 
+positive and negative values.</p>
+<p>It is possible to enhance this to a degree by making the assumption that the 
+value of the search in the next iteration is not likely to be too much different 
+from the value of the search in the  iteration just completed.&nbsp; Here's the code:</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+#define valWINDOW&nbsp; 50</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">alpha 
+= -INFINITY;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">beta 
+= INFINITY;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">for (depth = 1;;) {</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+val = AlphaBeta(depth, alpha, beta);</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+if (TimedOut())</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+break;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+if ((val &lt;= alpha) || (val &gt;= beta)) {</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+alpha = -INFINITY;&nbsp;&nbsp;&nbsp; // We fell outside the window, so try again 
+with a</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+beta = INFINITY;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp; full-width window (and 
+the same depth).</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+continue;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+}</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+alpha = val - valWINDOW;&nbsp; // Set up the window for the next iteration.</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+beta = val + valWINDOW;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+depth++;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">}</p>
+<p>The code for this got a little ratty but you can probably get past my use of 
+&quot;continue&quot; if you try.&nbsp; The idea is that the value of the last iteration of 
+alpha-beta is fed into the current iteration.&nbsp; Most of the time you'll get 
+a value back that is between alpha and beta.&nbsp; If you don't, you can try 
+again with a wider window.</p>
+<p>My re-search logic isn't very efficient, but I'm sure you can do better.&nbsp; 
+An obvious idea is to try to expand beta if the value that came back was greater 
+than or equal to beta, and to expand alpha if the value was less than or equal 
+to alpha, rather than expanding both alpha and beta, as I do above.&nbsp; This 
+can cause problems if you have <a href="instability.htm">search instability</a>, 
+which you will, so you have to be careful.&nbsp; The code I provided will always 
+work.</p>
+<h1>Search instability issues</h1>
+<p>This is yet another place where you have to be careful of 
+<a href="instability.htm">search instability</a>.&nbsp; 
+When I first added an aspiration window to my chess program, I assumed that if I 
+got a value back that was greater than or equal to beta, that the re-search 
+would result in a higher score the next time through.&nbsp; <i>Wrong!</i>&nbsp; 
+I had hellacious crashing problems.&nbsp; Here is the code:</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">alpha 
+= -INFINITY;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">beta 
+= INFINITY;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">for (depth = 1;;) {</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+val = AlphaBeta(depth, alpha, beta);</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+if (TimedOut())</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+break;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+if (val &lt;= alpha) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // WRONG!</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+alpha = -INFINITY;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+beta = val + 1;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+continue;<br>
+&nbsp;&nbsp;&nbsp; }</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+if (val &gt;= beta) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // WRONG!</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+beta = INFINITY;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+alpha = val - 1;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+continue;<br>
+&nbsp;&nbsp;&nbsp; }</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+alpha = val - valWINDOW;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+beta = val + valWINDOW;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;&nbsp;&nbsp; 
+depth++;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">}</p>
+<p>The above code would work great if you could be sure that your re-search 
+would work.&nbsp; But of course what happened to me is:</p>
+<ol>
+  <li>The search with (alpha, beta) <a href="glossary.htm#fail-high">failed high</a>.</li>
+  <li>The re-search with (beta - 1, INFINITY) <a href="glossary.htm#fail-low">failed low</a>.</li>
+  <li>The re-search with (-INFINITY, alpha + 1) failed high.</li>
+  <li>And so on, and so on, and so on ...</li>
+</ol>
+<p>Anything you write needs to prevent this.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

@@ -1,0 +1,175 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Collecting the Principal Variation</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="quiescent.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="iterative.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/pv.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Collecting the Principal Variation"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>A sticking point</h1>
+<p>People often ask&nbsp;how to retrieve the principal variation line after a 
+search has completed.&nbsp; The principal variation is the line (predicted 
+sequence of moves) that the program thinks represents best play for both sides.&nbsp; 
+This is not returned by an un-modified <a href="alphabeta.htm">alpha-beta 
+function</a> -- all alpha-beta returns is a score.</p>
+<p>What follows are modifications to a normal alpha-beta search, which collect 
+the principal variation.&nbsp; Changes are highlighted.</p>
+<p class="c-code">
+<span class="highlit-code">typedef struct tagLINE {</span></p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp; int cmove;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+// Number of moves in the line.</span></p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp; MOVE argmove[moveMAX];&nbsp; 
+// The line.</span></p>
+<p class="c-code">
+<span class="highlit-code">}&nbsp;&nbsp; LINE;</span></p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">int AlphaBeta(int depth, int 
+alpha, int beta<span class="highlit-code">, LINE * pline</span>)<br>
+{</p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp; LINE line;</span></p>
+<p class="c-code">
+<br>
+&nbsp;&nbsp;&nbsp; if (depth == 0) {</p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+pline-&gt;cmove = 0;<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();</p>
+<p class="c-code">
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; GenerateLegalMoves();<br>
+&nbsp;&nbsp;&nbsp; while (MovesLeft()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -AlphaBeta(depth - 1, -beta, 
+-alpha<span class="highlit-code">, &amp;line</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt;= beta)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return beta;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alpha = val;</p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+pline-&gt;argmove[0] = ThisMove();</span></p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+memcpy(pline-&gt;argmove + 1, line.argmove,</span></p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+line.cmove * sizeof(MOVE));</span></p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+pline-&gt;cmove = line.cmove + 1;</span></p>
+<p class="c-code">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; return alpha;<br>
+}</p>
+<p>This is somewhat inefficient because it uses a lot of stack space, but the 
+code would work and would not be slow.&nbsp; With these changes, if the function 
+returns a value between alpha and beta, it returns not only the value, but the 
+line (series of predicted moves) that resulted in the value.&nbsp; This is true 
+for any node in the tree, <i>including the root</i>, which is why this is worth 
+doing.&nbsp; You may some call to alpha-beta:</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">val = AlphaBeta(depth, -INFINITY, INFINITY, &amp;line);</font></p>
+<p>What you get is the value of the position, and in the &quot;line&quot; buffer are the 
+moves that constitute the predicted line.&nbsp; The &quot;line&quot; data structure is 
+just an array of moves that were made in this line, and an integer that lets you 
+know how many there were in the line.</p>
+<p>If you call AlphaBeta with depth = 0, the function calls &quot;Evaluate()&quot; and 
+returns that value.&nbsp; There are no moves searched, so there is no move 
+selected, so along with the score is a line of length zero.</p>
+<p>If you call the search with some other depth, and you find a move whose score 
+is between alpha and beta, you receive not just the score, but the moves that 
+resulted in the score.&nbsp; In order to create the line for this instance of 
+AlphaBeta, you take the move that was just searched, stick it in the line buffer 
+that was passed in, and append the moves from the local line buffer.</p>
+<p>You might be asking, &quot;Why is there both a line buffer passed in, and a new 
+one allocated on the stack with each recursive call?&quot;&nbsp; The reason is that 
+you don't want to wreck a line that has already been created, if you find a 
+partial line somewhere later in the tree, and that line gets refuted.&nbsp; It 
+is not true that if you find a node whose score is between alpha and beta, that 
+that node will work its way all the way to the root of the tree.&nbsp; There are 
+lots of fragmentary PV's that get discarded.</p>
+<p>For those of you who are aghast because I used &quot;memcpy&quot; in an inner loop, it 
+costs nothing since it is rarely executed.</p>
+<h1>Another idea</h1>
+<p>The other obvious way to collect the PV is to retrieve it from the main 
+transposition table after the score comes back.&nbsp; One of the fields in each 
+transposition table element is the best move found in the position.&nbsp; Since 
+each element in the PV contains a score that is between alpha and beta, there 
+should be a &quot;best move&quot; stored in each hash element.</p>
+<p>It should be possible to follow the hash element chain and extract the PV 
+from the transposition table, easy as pie.</p>
+<p>I know that many programs (including some professional programs) do this, but 
+I have not tried it.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+11/04/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+</html>

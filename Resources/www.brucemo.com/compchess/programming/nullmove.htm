@@ -1,0 +1,256 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Null-Move Forward Pruning</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="matehash.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="extensions.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/nullmove.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Null-Move Forward Pruning"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<font face="Book Antiqua, Times New Roman, Times">
+<h1>Extra speed with no down-side</h1>
+</font>
+
+<p>Null-move forward pruning allows a chess program to experience a dramatic 
+reduction in branching factor with some manageable risk of missing something 
+important.&nbsp; It results in a dramatic improvement in search depth, and in most 
+cases markedly decreases the amount of required to find tactics.&nbsp; It does this 
+by pruning out a lot of useless crap and leaving mostly good stuff.</p>
+<p>The technique has been described in several publications, but the article 
+that got everyone thinking about null-move is an ICCA Journal article by Chrilly 
+Donniger, published in September 1993.</p>
+<p>Imagine a chess position in a tree somewhere.&nbsp; Your program is going to 
+search each of the legal moves in this position to a depth of D.&nbsp; If any of 
+those moves result in a score that exceeds beta, you are going to return beta 
+immediately.&nbsp; If any of them exceed alpha, but don't exceed beta, you are going 
+to remember the move and the score, since it could be part of the principal 
+variation.&nbsp; If all of them are &lt;= alpha, you are going to return alpha.</p>
+<p>Null-move forward pruning is a step you perform prior to searching any of the 
+moves.&nbsp; You ask the question, &quot;If I do <i>nothing</i> here, can the opponent do
+<i>anything</i>?&quot;</p>
+<p>Note that in the regular case described two paragraphs ago, you are not 
+asking this question.&nbsp; You are asking about the best way to hurt the opponent.&nbsp; 
+Asking if the opponent can hurt you is something very different.</p>
+<p>It turns out that there are a lot of cases where the opponent can't hurt 
+you.&nbsp; Let's say that you are up a rook, and none of your pieces are <i>en-prise</i>.&nbsp; 
+In this case, the opponent makes some random move, then you still bash them, 
+since you are up a rook.&nbsp; The point of null-move forward pruning is to simply 
+get rid of such nonsense without having to spend a lot of time on it.</p>
+<p>This is kind of like a fighter expressing heavy confidence in his ability, by 
+giving the opponent a free shot.&nbsp; <i>If the opponent can't knock the fighter 
+down with a free shot, chances are he's going to lose the fight if the fighter 
+goes to the trouble of hitting him.</i></p>
+<p>I'll stop talking around the problem now and explain&nbsp; how this works in the 
+case of computer chess.&nbsp; Before you search any moves, and in fact before you 
+generate any moves, you do a reduced-depth search, with the <i>opponent</i> to 
+move first, and if that search results in a score &gt;= beta, you simply return 
+beta without searching any moves.</p>
+<p>The idea is that you give the opponent a free shot at you, and if your 
+position is still so good that you exceed beta, you assume that you'd also 
+exceed beta if you went and searched all of your moves.</p>
+<p>The reason this saves time is that this initial search is made with <i>
+reduced depth</i>.&nbsp; The depth reduction factor is called R.&nbsp; So rather than 
+searching all of your moves to depth D, you search your <i>opponent's</i> moves 
+with a depth of D-R.&nbsp; An excellent value of R is 2.&nbsp; So, if for instance you 
+were going to search all of your moves to depth 6, you end up searching all of 
+your opponent's moves to depth 4.</p>
+<p>This results in a massive time savings, and a practical speedup of a ply or 
+two.&nbsp; That's a vastly huge amount!</p>
+<p>Here is the source, added to an alpha-beta search, with changes 
+highlighted:</p>
+
+<p class="c-code"><span class="highlit-code">#define R&nbsp;&nbsp; 2</span></p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">int AlphaBeta(int depth, int 
+alpha, int beta)<br>
+{<br>
+&nbsp;&nbsp;&nbsp; if (depth == 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();<br>
+<span class="highlit-code">&nbsp;&nbsp;&nbsp; MakeNullMove();<br>
+&nbsp;&nbsp;&nbsp; val = -AlphaBeta(depth - 1 - R, -beta, -beta + 1);<br>
+&nbsp;&nbsp;&nbsp; UnmakeNullMove();<br>
+&nbsp;&nbsp;&nbsp; if (val &gt;= beta)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return beta;<br>
+</span>&nbsp;&nbsp;&nbsp; GenerateLegalMoves();<br>
+&nbsp;&nbsp;&nbsp; while (MovesLeft()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -AlphaBeta(depth - 1, -beta, -alpha);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt;= beta) // Delete these to get straight<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return beta; // min-max instead of alpha-beta.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alpha = val;<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; return alpha;<br>
+}</p>
+
+<p>I'm using a trick in this code.&nbsp; I want to see if the 
+score of the null-move search is beta or better.&nbsp; If it's not beta or better, I 
+don't care how much worse than beta it is, so I use a minimal window, in order 
+to try to get more cutoffs faster.&nbsp; Essentially I'm calling it with (beta - 1, 
+beta), but since you have to reverse alpha and beta and negate them when you 
+recurse, it comes out the way it appears in the source code.</p>
+<p>It goes without saying that this doesn't work if the 
+side to move is in check (because the opponent immediately takes the king).&nbsp; The 
+degree to which null-move forward pruning will be allowed to happen recursively 
+must also be considered, since if you let several of them follow in a row the 
+search degenerates down to nothing.&nbsp; One obvious attempt is to not allow two 
+null-move searches to occur without an intervening &quot;real&quot; move.&nbsp; Another idea is 
+to allow exactly two null-move searches before forcing a &quot;real&quot; move.&nbsp; In 
+practice these seem to work about equally well.</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<h1>Well, almost no down-side</h1>
+</font>
+
+<p>Unfortunately, null-move forward pruning doesn't work in some cases.&nbsp; A big 
+assumption is made -- the assumption that making a move will result in a higher 
+score than not making a move.&nbsp; Unfortunately, there are a whole class of 
+positions where this is not true, and these are common enough that there is even 
+a name for them.&nbsp; These positions are called <i>zugzwangs</i>.&nbsp; A zugzwang is a 
+position where you are fine if you don't move, but your position collapses if 
+you are forced to move.&nbsp; Here is a classic example:</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<p><img border="0" src="images/nullmo12.gif" width="448" height="448"></p>
+</font>
+
+<p>In this position, if white is forced to move, he has to play Kb2, and black 
+plays Kd2 and the pawn queens.&nbsp; If white doesn't have to move, then black plays 
+Kc3 and the position is a draw.&nbsp; (This is actually a mutual zugzwang, since both 
+sides suffer from having to move, but that's beside the point.)</p>
+<p>If this position were reached, and null-move forward pruning were attempted, 
+it could indicate that black has no threat, because in fact black doesn't have a 
+threat.&nbsp; Black is waiting for white to wreck his own position, which is 
+something different.</p>
+<p>For this reason, null-move forward pruning is not used, at least in a 
+straightforward way, in endgames.&nbsp; If you do try to use it in endgames, very bad 
+things will happen very often.</p>
+<p>Another, more nasty example, is as follows:</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<p><img border="0" src="images/nullmo13.gif" width="448" height="448"></p>
+</font>
+
+<p>This position is taken from Goetsch and Campbell's &quot;Experiments with the 
+Null-Move Heuristic&quot; published in Computers, Chess, and Cognition, ISBN 
+0-387-97415-6.</p>
+<p>In this position, with white to move, white can't do anything and is mated on 
+the next move.&nbsp; A two-ply search will spot this with no problem:&nbsp; 1. &lt;any&gt; Qg2#.</p>
+<p>If you try to use null-move forward pruning here, something bad will happen.&nbsp; 
+We'd been planning to do a full-width two-ply search, so let's instead do a 
+zero-ply search for the other side and try to detect threats.&nbsp; In zero plies, 
+black can't make any moves, so the &quot;Evaluate&quot; function is called, and returns +5 
+or so, since white is up a rook.&nbsp; This is probably above beta, so the search 
+returns beta.</p>
+<p>This is not what should have happened!&nbsp; The search should have returned a 
+very small value, indicating that white is mated.</p>
+<p>What we see here is a type of horizon effect that is common when null-move 
+forward pruning is used.&nbsp; Without null-move forward pruning, white makes a move 
+that doesn't achieve anything, and then there are enough plies of search depth 
+(one in this case) for black to kill white.&nbsp; With null-move forward pruning and 
+with an R of sufficiently high value (for instance R=2), white can do nothing, 
+and yet black doesn't have enough depth left to see the win.</p>
+<p>This example is may strike you as odd, given that it occurs with a very 
+shallow search, but there are a great many example cases where this happens with 
+just enough search depth that the tactic could have been seen with a normal 
+search, but is missed by null-move forward pruning.&nbsp; In fact, this pattern of 
+black queen on h3 and pawn on f3 is an extremely dangerous case for chess 
+programs.</p>
+<p>Another problem with null-move forward pruning is that it introduces
+<a href="instability.htm">search instability</a>.&nbsp; Whether or not the 
+null-move search succeeds or fails has something to do with the value of beta.&nbsp; 
+The next time this node is visited, the value of beta might be different, so the 
+search might have an irrationally different value.&nbsp; You could pass in an 
+alpha-beta window of (7, 30) and the search might fail high, but if you pass in 
+(7, 50), it could fail low.</p>
+<p>In practice, the search speedup outweighs the occasional tactical mistake and 
+the addition of search instability.</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<h1>Some ideas</h1>
+</font>
+
+<p>It's interesting to fiddle around trying to find a better value for R than 
+two.&nbsp; You can try one, three, four, some larger number, or a number that changes 
+depending upon depth of search, how much material is on the board, etc.&nbsp; I've 
+never been able to do better than straight R=2, but there has been some research 
+that suggests that other values might be good, and there are a few people who 
+are using R=3 in at least part of the tree.</p>
+<p>It's also tempting to try to figure out a way to use null-move forward 
+pruning in endgames, through some sort of verification search.&nbsp; If your 
+null-move search fails high, you do a normal search to reduced depth, and see if 
+that fails high as well.&nbsp; This seems to me like it&nbsp; might be very expensive, but 
+it could be worth looking at.</p>
+<p>There are other enhancements that are worth trying, but I'm not trying to 
+make a complete list here.&nbsp; You can look in the Donninger article, the article 
+in Computers, Chess, and Cognition, or at any of Ernst Heinz' articles about 
+null-move forward pruning and related topics.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+11/04/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

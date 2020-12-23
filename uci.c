@@ -155,7 +155,7 @@ void matein_(S_BOARD *board, S_SEARCHINFO *info, int mate_moves){
 		parseFen(fenstr, board);
 		printBoardOnly(board);
 		
-		if (mate_moves >= 4) {
+		if (mate_moves > 5) {
 			info->depth = 8;
 		}
 		else {
@@ -247,7 +247,6 @@ void UCILoop() {
 			info->quit = TRUE;
 			break;
 		}
-		#ifdef BETA
 		else if(!strncmp(line, "analysis", 7)){
 			int mate_moves;
 			printf("Mate in : ");
@@ -255,7 +254,6 @@ void UCILoop() {
 
 			matein_(board, info, mate_moves);
 		}
-		#endif
 		if (info->quit) {
 			break;
 		}

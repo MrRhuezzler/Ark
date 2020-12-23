@@ -1,0 +1,268 @@
+<html>
+
+<head>
+
+
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Alpha-Beta Search</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="minmax.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="pvs.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/alphabeta.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Alpha-Beta Search"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+<h1>The problem with min-max</h1>
+<p>Alpha-beta is very similar to <a href="minmax.htm">min-max</a>, and in fact, 
+there is really only one extra statement.&nbsp; Min-max works by examining the 
+entire game tree, and picking the best path that can be <i>forced</i>.&nbsp; You 
+try to get the best result that you can get, bearing in mind that your opponent 
+will do all that they can to prevent you from getting anything.&nbsp; Min-max is 
+very easy to conceptualize, but it is not efficient.&nbsp; Each time  an extra ply of depth 
+is searched, the size of the tree  searched grows exponentially. </p>
+<p>Chess tends to have about 35 legal moves in any given position.&nbsp; So if 
+ 
+min-max is used to search to one ply of depth, about 35 positions are examined.&nbsp; 
+If the function is used to search two plies, about 35^2 positions are searched.&nbsp; 
+That's about a thousand.&nbsp; This doesn't seem that bad so far, but the number 
+gets enormous very quickly.&nbsp; A six-ply search is almost two billion 
+positions, for example, and a ten-ply search is over two quadrillion.</p>
+<p>It is important to search as deeply as possible, if the goal is to create a 
+strong chess player by examining the first few plies of the game tree and 
+applying a heuristic evaluation at the leaf nodes.&nbsp; Min-max doesn't allow 
+for a very deep search, because the effective branching factor is extremely 
+high.</p>
+<h1>Alpha-beta and the bag example</h1>
+<p>Fortunately, there is a way to reduce the branching factor.&nbsp; 
+Furthermore, it's perfectly safe, and in fact there is absolutely no down-side 
+-- it's a pure win.&nbsp; It relies on the idea that if you know that you are 
+guaranteed to get a score of X if you follow one path, you can stop examining 
+any other particular path once it becomes obvious that you will score less than 
+X -- you don't have to figure out exactly how much less than X you will score.</p>
+<p>This may seem trivial, but the result is a reduction in the effective 
+branching factor, from 35 to as low as 6 for chess.</p>
+<p>I'll try an example.&nbsp; Let's 
+say that your worst enemy has a bunch of bags sitting in front of him.&nbsp; The 
+bags are there because he lost a bet, and now he has to give you something, but 
+the rules about what he has to give you are very obtuse.</p>
+<p>Each bag contains a few things.&nbsp; You are going to get one of the things.&nbsp; 
+You get to pick which bag the thing will come out of, but he gets to pick what 
+you get out of that bag.&nbsp; You want to get your thing quickly and leave, 
+because you have better things to do than sit there digging through bags while 
+your worst enemy glares at you.</p>
+<p>You are going to look through one bag at a time, and you are going to look 
+through the items in each bag one item at a time.</p>
+<p>Obviously, what is going to happen is that your enemy is going to give you 
+the worst thing in the bag you choose (he knows you well, so both of you will 
+agree upon what the worst thing is), so your goal is to pick the bag that has 
+the nicest worst thing.</p>
+<p>It's easy to see how you'd apply min-max to this problem.&nbsp; You are the 
+maximizing player, and you are going to take the best bag.&nbsp; Your enemy is 
+the minimizing player.&nbsp; He's going to try to make sure that the best bag is 
+as bad as possible, by giving you the worst thing out of it.&nbsp; All you have to do to use min-max is take the bag that 
+has the best worst thing in it, if that makes any sense.</p>
+<p>Min-max gets you a provably correct result, assuming that you are able to 
+evaluate the items in the bags accurately.&nbsp; Accuracy of evaluation isn't 
+important here, and it doesn't have anything to do with how either min-max or 
+alpha-beta works.&nbsp;&nbsp; Let's stipulate that you can evaluate them 
+correctly.</p>
+<p>The problem with min-max, as has been described previously, is that it is 
+inefficient.&nbsp; You have to look at everything in every bag, which takes a 
+lot of time.</p>
+<p>But how can we do this more efficiently than min-max?</p>
+<p>Let's start with the first bag, and look at everything, and score the bag.&nbsp; 
+Let's say that this bag contained a peanut butter sandwich and the keys to a new 
+car.&nbsp; You figure that the sandwich is worth less (and since your opponent 
+knows you, he will agree), so if you take this bag 
+you will get a sandwich.&nbsp; The fact that there are also car keys in the bag 
+doesn't matter, because you know that you won't get the car.</p>
+<p>Now you start in on the next bag.&nbsp; The process you use is a little 
+different than min-max this time.&nbsp; You look at items one at a time, and 
+compare them against the best thing you <i>know</i> you can get (the sandwich).&nbsp; 
+As long as items are better than the sandwich, you handle this as you do in 
+min-max -- you just keep track of the worst thing in this bag.&nbsp; If you run 
+out of things in this bag, without finding anything worse than a sandwich, this 
+will become your bag of choice, and the worst thing in it will become your 
+expected result.</p>
+<p>But if you find another sandwich in this bag, or something you think is worse than the 
+sandwich, you discard this bag <i>without looking at any more items</i>.&nbsp; 
+The reason is that you know that if you take this bag, the absolute best you can 
+do is no better than the sandwich (and might be worse).</p>
+<p>Let's say that the first item in the bag is a twenty-dollar bill, which is 
+better than the sandwich.&nbsp; If everything else in the bag is no worse than 
+this, that's the item that your opponent will be forced to give you if you take 
+this bag, and this becomes your bag of choice.</p>
+<p>The next thing in the bag is a six-pack of pop.&nbsp; You think this is 
+better than the sandwich, but it's worse than the twenty, so this bag is still 
+your bag of choice, but you expect to get a six-pack of pop if you take this bag.&nbsp; The next thing is a rotten fish.&nbsp; This is worse 
+than the sandwich.&nbsp; You say &quot;no thanks,&quot; hand the bag back, and forget 
+about this bag.</p>
+<p><i>It doesn't matter what else is in the bag.</i>&nbsp; There could be the keys to 
+another car, which doesn't matter, since you are going to get the fish.&nbsp; 
+There could be something much worse than the fish (I leave this to your 
+imagination).&nbsp; This doesn't matter either, since the fish is already bad 
+enough, <i>and</i> <i>you know you can do better by taking the bag with the 
+sandwich</i>.</p>
+<h1>The algorithm</h1>
+<p>Alpha-beta works just like this, only recursively applied, and I got it a bit 
+backwards since I've been explaining the minimizing player's strategy, which I 
+hope is something that won't be too confusing.</p>
+<p>The idea is that  two scores are passed around in the search.&nbsp; 
+The first one is alpha, which is the best score that can be forced by some means.&nbsp; 
+Anything worth less than this is of no use, because there is a strategy that is 
+known to result in a score of alpha.&nbsp; Anything less than or equal to alpha is no improvement.</p>
+<p>The second score is beta.&nbsp; Beta is the worst-case scenario for the 
+opponent.&nbsp; It's the worst thing that the opponent has to endure, because 
+it's known that there is a way for the opponent to force a situation no worse 
+than beta, from the opponent's point of view.&nbsp; If the search finds 
+something that returns a score of beta or better, it's <i>too</i> good, so the 
+side to move is not going to get a chance to use this strategy.</p>
+<p>So at all times when searching, you know that you can do no worse than alpha, 
+and that you can do no better than beta.&nbsp; Anything outside of these bounds 
+you can ignore.</p>
+<p>When searching moves, each move searched returns a score that has some 
+relation to alpha and beta, and the relation is very important and might mean 
+that the search can stop and return a value.</p>
+<p>If a move results in a score that was less than or equal to alpha, it was 
+just a bad move and it can be forgotten about, since, as I stated a few 
+paragraphs ago, there is known to be a strategy that gets the moving side a 
+position valued at alpha.</p>
+<p>If a move results in a score that is greater than or equal to beta, this 
+whole node is trash, since the opponent is not going to let the side to move 
+achieve this position, because there is some choice the opponent can make that 
+will avoid it.&nbsp; 
+ 
+So if we find something with a score of beta or better, it has been 
+proven that this whole node is not going to happen, so <i>the rest of the legal 
+moves do not have to be searched</i>.</p>
+<p>If a move results in a score that is greater than alpha, but less than beta, 
+this is the move that the side to move is going to plan to play, unless 
+something changes later on.&nbsp; So alpha is increased to reflect this new 
+value.</p>
+<p>It's possible, and in fact quite common, that none of the legal moves result 
+in a score that exceeds alpha, in which case this position was junk from our 
+point of view, and we will avoid it by making a different choice somewhere above 
+here in the game tree.</p>
+<p>Finding the rotten fish in the second bag was like exceeding beta.&nbsp; If 
+there had been no fish in the bag, determining that the six-pack of pop bag was 
+better than the sandwich bag would have been like exceeding alpha (one ply 
+back).</p>
+<p>Here is the algorithm, with changes from min-max highlighted:</p>
+<p class="c-code">int <span class="highlit-code">AlphaBeta</span>(int depth<span class="highlit-code">, 
+int alpha, int beta</span>)</p>
+<p class="c-code">{</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; if (depth == 0)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; GenerateLegalMoves();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; while (MovesLeft()) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -<span class="highlit-code">AlphaBeta</span>(depth 
+- 1<span class="highlit-code">, -beta, -alpha</span>);</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+if (val &gt;= beta)</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return beta;</span></p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+alpha = val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; return alpha;</p>
+<p class="c-code">}</p>
+<p>If the highlighted characters are removed, what is left is a min-max 
+function.&nbsp; As can be seen, there aren't many changes.</p>
+<p>The function is passed the depth it should search, and -INFINITY as alpha, and 
++INFINITY as beta:</p>
+<p class="c-code">val = AlphaBeta(5, -INFINITY, 
+INFINITY);</p>
+<p>This does a five-ply search.</p>
+<p>When I wrote min-max, I used a trick that let me avoid writing a &quot;Min&quot; 
+function in addition to a &quot;Max&quot; function.&nbsp; In the case of that algorithm, I 
+was able to do it by simply negating the return value from recursive calls.&nbsp; 
+This caused the function to change its perspective with each recursion, to 
+reflect the fact that the two players are in contention, and have opposite 
+goals.</p>
+<p>The same thing is done with this alpha-beta function.&nbsp; The only added 
+complication is that alpha and beta are also &quot;flipped around.&quot;&nbsp; When the 
+function recurses, alpha and beta negate and switch places.&nbsp; This causes a 
+situation that is more complicated than the bag example, but just as provably 
+better than min-max.</p>
+<p>What ends up happening is that in many places in the tree, beta is easy to 
+exceed, and so a tremendous amount of work is avoided.</p>
+<h1><a name="branching factor"></a>A possible weakness</h1>
+<p>The algorithm is heavily dependent upon the order in which moves are searched.&nbsp; 
+If you consistently search the worst move first,  a beta cutoff is never achieved, 
+and so the algorithm works just like min-max, meaning very inefficiently.&nbsp; 
+The algorithm ends up looking at the entire game tree, just like min-max.</p>
+<p>If the program always manages to pick the best move to search first, the math is such 
+that the effective branching factor is equal to approximately the square root 
+of the expected branching factor.&nbsp; This is the best possible case for the 
+alpha-beta algorithm.</p>
+<p>Since chess has a branching factor of 35, this means that the alpha-beta 
+algorithm performed efficiently upon a chess tree will produce a branching 
+factor of approximately six.</p>
+<p>This is a massive improvement, and it allows you to search <i>twice</i> as deeply in the same 
+number of nodes.</p>
+<p>This is why move ordering is extremely important when alpha-beta search is 
+used.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

@@ -1,0 +1,115 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Search Tree Introduction</title>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav1h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav2h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="minmax.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav2"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/tree.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Search Tree Introduction"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>In chess, both players know where the pieces are, they alternate moves, and 
+they are free to make any legal move.&nbsp; The object of the game is to 
+checkmate the other player, to avoid being checkmated, or to achieve a draw if 
+that's the best thing given the circumstances.</p>
+<p>A chess program selects moves via use of a <i>search</i> function.&nbsp; A 
+search function is a function that is passed information about the game, and 
+tries to find the best move for side that the program is playing.</p>
+<p>There are lots of ways to write a search function, and I don't want to stifle 
+creativity by only talking about one of them, but I want these pages to focus on 
+practical methods.&nbsp; I figure that people who don't have any interest in 
+writing a chess program might want to understand how the good ones work, and 
+those who are considering writing a chess program are probably interested in 
+following in the footsteps of those who have written strong programs.</p>
+<p>It is possible that everything I say is crap, and it's important to keep an 
+open mind about this.&nbsp; What I say here may not have anything to do with 
+techniques that will produce the strongest program.&nbsp; Keep this in mind, and 
+if you can think of a better way to do it, go for it.</p>
+<p>Modern chess programs view a game of chess as a tree.&nbsp; You have the root 
+position, which is the position on the board now.&nbsp; From this position, the 
+side to move can choose amongst some number of legal moves.&nbsp; These legal 
+moves result in <a href="glossary.htm#successor">successor positions</a>, which 
+are positions that the side to move essentially gets to pick from.&nbsp; It's 
+not the move that you are selecting, it's the position.</p>
+<p>Each of these successor positions will result in a position that your 
+opponent can consider to be the root position, and they will choose from amongst 
+their successors.</p>
+<p>What you end up with is something that looks like a family tree.&nbsp; You 
+have the ancestors at the top, then you have their children, and then you have 
+their children's children, and so on.&nbsp; The tree is very, very bushy, since 
+each position tends to have about 35 successors in chess.</p>
+<p>Ideally, you would like to write a program that can work its way through all 
+of the generations, until it finds a checkmates or draws, then choose the path 
+that will get it to the best possible outcome.&nbsp; It is theoretically 
+possible to do this, but in practicality, it is impossible to search most 
+positions this deeply.</p>
+<p>So what is done instead is that the tree is searched as deeply as possible 
+within a given time frame, and in those positions where you don't know how the 
+game will end, you look at the position, take a guess, and assign a value to 
+this position based upon the guess.</p>
+<p>So now you have this giant family-tree structure, with all of the possible 
+outcomes labeled according to their real or guessed value, and you want to make 
+sense out of it, and pick the move <i>now</i> that will allow you to reach the 
+position that seems to be the best.</p>
+<p>You do this by using a tree search algorithm.&nbsp; The most obvious one is
+<a href="minmax.htm">min-max</a>.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+
+
+</html>

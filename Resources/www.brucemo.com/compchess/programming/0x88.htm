@@ -1,0 +1,234 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>0x88 Move Generation</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="instability.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="movetable.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/0x88.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="0x88 Move Generation"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>History</h1>
+<p>When I was at the Hong Kong WCCC in 1995, I had some conversations with David 
+Kittinger.&nbsp; He told me about a move generation scheme, whose name I 
+promptly forgot.&nbsp; When I came back home, I explained this scheme online 
+many times.&nbsp; Since I didn't know the name, I couldn't give it the proper 
+name, and it kind of acquired a name.&nbsp; The name that seems to have stuck is 
+&quot;0x88&quot;, which is means hexidecimal 88.</p>
+<p>The reason it's called 0x88 is that this constant is critical in the 
+implementation of the 
+scheme.</p>
+<p>The advantages of the 0x88 scheme are:</p>
+<ol>
+  <li>It's acceptably fast.</li>
+  <li>The code is small and not complex.</li>
+  <li>You get a good in-check routine as a side-effect.</li>
+</ol>
+<h1>Board representation and basic mechanics</h1>
+<p>A regular chessboard is 8 x 8 squares.&nbsp; The &quot;standard&quot; numbering of 
+these squares is 0..63, with a1 being 0, b1 being 1, a2 being 8, h8 being 63, 
+and you can fill in the rest for yourself.&nbsp; Note that this is zero-based, 
+since we are not using Pascal here, of course.</p>
+<p>0x88 uses a board that is a bit different.&nbsp; The board is 128 squares.&nbsp; 
+a1..h1 are still 0..7, but there are un-used files i-p to the right of the 
+h-file.&nbsp; Essentially it's as if you take a dummy chessboard and put it to 
+the right of the &quot;real&quot; chessboard.</p>
+<p>So a2 ends up being 16, a8 ends up being 112, and h8 is element 119.</p>
+<p>The formula for any square is:</p>
+<p class="c-code">index = rank * 16 + file</p>
+<p>You are probably wondering why this is done.&nbsp; There are a couple of 
+reasons, but I'll only discuss the most critical in this section.&nbsp;&nbsp; 
+The reason it is done is so you can detect if an iterated ray traversal has 
+reached the left or right edges of the board.</p>
+<p>I'm sure that was clear as mud.&nbsp; Let's assume that you have an 8 x 8 
+board, and we want to consider a rook on the square a3, which is index 16 on an 
+8 x 8 board.&nbsp; Let's generate destination squares for this rook.&nbsp; We'll 
+start by going up the a-file.&nbsp; To go up a file, we'll add 8 to the index.&nbsp; 
+So we start from 16, add 8, and get 24.&nbsp; Is this on the board?&nbsp; With 
+this 8 x 8 board, we can check to see if the index is less than 64.&nbsp; 24 is 
+less than 64, so we're on the board.&nbsp; Next destination is 32, then 40, then 
+48, then 56, then 64.&nbsp; 64 is not less than 64, so this one is off the 
+board, and we stop.</p>
+<p>Okay, let's go down the a-file from a3 now.&nbsp; a3 is 24, subtracting 8 
+gets us 16.&nbsp; Is that on the board?&nbsp; The test here is greater than or 
+equal to zero, and 16 is.&nbsp; So index 16 (a2) is on the board.&nbsp; The next 
+destination is 8, that's on the board, then 0, which is on the board, then -8, 
+which is less than zero, so that is off the board.</p>
+<p>We've used a different test in each of these cases, which is annoying.&nbsp; 
+It would be much better if we could use one piece of code to do this, which 
+would require one test.&nbsp; The test can be:</p>
+<p class="c-code">if ((index &lt; 0) || (index &gt;= 64))</p>
+<p>That's really two tests, which is inefficent.&nbsp; We can do this in one 
+test, since the board size is a power of two:</p>
+<p class="c-code">if (!(index &amp; 0x40))</p>
+<p>This catches both the case where the index has gone off the bottom of the 
+board, and the case where it's gone off the top.&nbsp; In the top case, the 0x40 
+bit is set because we've exceeded 64, and in the bottom case it's set thanks to 
+the way in which negative numbers are represented in two's-complement binary.</p>
+<p>If you don't understand this, you'd better stop and figure it out, because 
+unless you understand it, the rest of this page is going to read like hash.</p>
+<p>If you are paying attention, you will have noticed that in my example, the rook went up the 
+file and down the file, but it didn't go left or right.&nbsp; The reason it 
+didn't go left or right is that this system fails if you try to go left or 
+right.&nbsp; The system cannot detect if an iterated ray traversal has gone off 
+the right or left edges of the board.&nbsp; If you start on a3, and you 
+increment your index by one until you end up on h3, you can increment the index 
+again, which gets you to a4.&nbsp; a4 is still on the board, and there is no 
+elegant trick you can use to figure out if you've gone past the h-file.&nbsp; 
+You have the same problem if you try to go left -- if you start on a3 and 
+decrement, you are on h2, which is still on the board, but there is no piece&nbsp; 
+that moves like this in chess.</p>
+<p>So the problem with a 64-square board is that it is difficult to detect that 
+you have &quot;wrapped around&quot; from left to right and vice versa.</p>
+<p>The 0x88 system solves this problem.&nbsp; By using a 16 x 8 board, you get a 
+marker bit.&nbsp; You can tell if you've gone off into the unused right board, 
+because the 0x08 bit is set if you've done this.&nbsp; h1 is 7, if you add one 
+you get 8, which has the 0x08 bit set.&nbsp; None of the &quot;left&quot; (real) board 
+squares has the 0x08 bit set, and all of the &quot;right&quot; (dummy) board squares have 
+this bit set.&nbsp;&nbsp; If you are on a3 and you try to go to the left one 
+square, you're on p2, which is in the dummy board, which has the 0x08 bit set.</p>
+<p>You can combine the 0x08 test with the 0x80 test (0x80 rather than 0x40, 
+since things have changed a bit since there are 128 squares), and do both tests 
+at the same time.&nbsp; 0x80 combined with 0x08 is 0x88, hence the name of the 
+scheme.</p>
+<p>If you understand what I'm talking about, it should be clear now how 0x88 
+works.&nbsp; Your move generation loop looks like this:</p>
+<p class="c-code">while (!(index &amp; 0x88)) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; GenerateMove(index);</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; index += delta;</p>
+<p class="c-code">}</p>
+<p>This is extremely elegant.&nbsp; You can do something like this:</p>
+<p class="c-code">void GenerateMoves(int square, int * ptab)</p>
+<p class="c-code">{</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; for (; *ptab; ptab++) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int&nbsp;&nbsp;&nbsp; 
+index;</p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (index = 
+square; !(index &amp; 0x88); index += *ptab)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+GenerateMove(index);</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code">}</p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">int argdBishop[] = { 17, 15, -17, -15, 0 };</p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">void GenerateBishopMoves(int square)</p>
+<p class="c-code">{</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; GenerateMove(square, argdBishop);</p>
+<p class="c-code">}</p>
+<p>This is fast enough, and there is very little code.&nbsp; The only thing that 
+distinguishes a bishop from a rook or a queen is the data in the little table, 
+so obviously you can add in the rest of the pieces in a few seconds without 
+adding any significant code.</p>
+<p>Of course you still have special code for&nbsp; with pawns and castling, but 
+every system has those problems.</p>
+<h1>A bonus</h1>
+<p>Another thing you get from the 0x88 system is quick detection of attacks, and 
+this is the other reason for the 16 x 8 board.&nbsp; If you subtract two indexes 
+of squares on that board, you get a value that accurately describes the 
+relationship between the two squares.</p>
+<p>For example, if you subtract the index of square A, from the index of square 
+B, and you get the answer 1, you know that A is one square to the left of B.&nbsp; 
+If you get 16, you know that A is immediately below B on the board.</p>
+<p>This is not true if you are using an 8 x 8 board.&nbsp; It's true that d1 - 
+c1 = 1, but a2 - h1 is also 1.&nbsp; This problem of confusion due to 
+&quot;wrap-around&quot; is solved if you use a 128-element board.</p>
+<p>You can make use of this if you are trying to write an in-check function or 
+something else that needs to know if a piece on one square attacks another.</p>
+<p>You can make an array of approximately 257 elements (-128 ... +128), which is 
+appropriately filled in with bit-fields that describe which pieces can 
+conceivably move between two squares separated by some delta.&nbsp; You can use 
+a few less&nbsp; than 257 elements, but I won't spend time working that out 
+here.</p>
+<p>For example, in the element corresponding to a delta of 1, you have the king, 
+queen, and rook bits set, since these pieces can all move one square sideways.&nbsp; 
+If the delta is 17, you have bits set for king, queen, bishop, and white pawn, 
+since these can all move one up and to the right.</p>
+<p>This can be used to make an acceptably fast in-check routine.&nbsp; You get a 
+delta by subtracting the attacker's square from the target's square, add 128 to 
+it so you avoid a negative index, and look up in the pre-computed attack array 
+to see if a piece of the attacker's type could conceivably get to the 
+destination square in one move.</p>
+<p>If you determine that it's possible to get to the destination square, you 
+check to see if you are looking at a sliding piece (queen, rook, bishop).&nbsp; 
+If not, you are done.</p>
+<p>If the piece is a sliding piece, you can use your delta value to index 
+another array to get a value that you can use to traverse the ray from the source to destination square, looking for intervening pieces.</p>
+<p>For example, let's say that you are trying to see if a rook can get from a1 
+to h1.&nbsp; h1 is 8, a1 is 0, and 8 - 0 is 8.&nbsp; You look up the value in 
+the &quot;attacks&quot; array, and you see that a rook and a queen can both get from a1 to 
+h1.&nbsp; So you know that you have to traverse the ray.&nbsp; You look up 
+another value in a &quot;vector&quot; array, and you discover that in order to traverse 
+this vector you add 1 to your index each time.</p>
+<p>If you were trying to go from a1 to h8, you would have found a 17 in the 
+vector array.</p>
+<p>The resulting routine, which I won't provide code for, is fairly easy to 
+write and is acceptably fast.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

@@ -1,0 +1,134 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Pondering</title>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="movetable.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="time.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/pondering.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Pondering"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>What to do when it's your opponent's move</h1>
+<p>A chess program can think about the position for a specified time, makes what 
+it thinks is the best move, sit back and wait for the opponent to move, and when 
+the move comes in, repeat the process.</p>
+<p>This is very easy to program, but it has the disadvantage of wasting a lot of 
+processor time, since the program is sitting there idle when the opponent is 
+thinking.</p>
+<p>In some books on human chess, there are ideas about what to do when it's not 
+your move.&nbsp; One idea is to think of strategic aspects while your opponent 
+is thinking, and then concentrate on specific lines when it is your move.&nbsp; 
+This might be a good idea for humans, but if it's possible to do in a computer 
+chess program, it is not easy.</p>
+<p>When I took my program to the Hong Kong WCCC in 1995, I thought I had this 
+problem solved properly.&nbsp; When it was the opponent's turn to move, my 
+program would pretend it was the opponent, and just sit there and think.&nbsp; 
+When it came to be my program's turn to move again, it had its
+<a href="hashing.htm">hash tables</a> primed with interesting stuff and burned 
+through the first few plies very quickly.</p>
+<h1>A better way, I think</h1>
+<p>This worked well enough that my program didn't finish in last place, but at 
+that tournament I learned about a better way to do it, which I think that 
+everyone is doing now (and probably was then).&nbsp; This technique is called <i>
+pondering</i> or something that is translated as <i>permanent brain</i> if you 
+are German.&nbsp; I don't speak German, but it's possible that a better 
+translation might be &quot;continuous thinking&quot;. </p>
+<p>When your program moves, it has a <a href="pv.htm">principal variation</a> 
+that it has constructed.&nbsp; This principal variation is usually more than one 
+move long.&nbsp; The first move in the principal variation is the one that is 
+made on the chess board, but the rest of it has some utility other than just 
+being something that you'd display on the screen.</p>
+<p>The second move is the move that the program thinks that the opponent will 
+make.&nbsp; It's often a pretty good move, and in many cases it is the move that 
+the opponent finally does make.</p>
+<p>It is possible to gamble that the opponent will make this move, and tell the 
+program that the opponent did in fact make the move.</p>
+<p>So while the opponent is off trying to select a move, your program had made a 
+guess about which move will be selected, and is considering a reply.</p>
+<p>The your program's guess was correct, you've gotten a big head-start toward 
+selecting your next move, and it's even possible that your program might decide 
+that it's thought about this move for long enough, and move instantly.</p>
+<p>This leads to a situation often observed in games between two computers.&nbsp; 
+One program will think about a move, and then make it.&nbsp; The second one will 
+reply instantly.&nbsp; The first one will think again and make a move, to which 
+the second one will reply instantly again.&nbsp; This can happen for many 
+consecutive moves, until the second program has accumulated so much extra time 
+on its clock that it feels that it doesn't need to move instantly.</p>
+<p>If the opponent doesn't make the predicted move, your program will simply 
+undo the mis-predicted move, execute the one that was actually made, and begin 
+thinking about a move of its own.</p>
+<h1>Another idea</h1>
+<p>At the 1995 WCCC, my program had the privilege of playing Hitech.&nbsp; My 
+program got a lost position and started thinking for a long time.&nbsp; Rather 
+than thinking on the move that it thought my program would play, for the entire 
+time that my program was thinking, Hitech eventually decided that it had thought 
+for long enough about that particular move, and went onto the next one.&nbsp; If 
+my program made any of the ones that Hitech had already thought about, it would 
+move instantly.</p>
+<p>I don't know if this is good or bad, but it's another approach that is worth 
+considering.</p>
+<h1>Strength increase due to pondering</h1>
+<p>I have no idea, but it results in deeper searches and/or less time consumed, 
+so there must be some.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+11/04/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+
+
+</html>

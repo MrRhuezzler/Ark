@@ -1,0 +1,167 @@
+
+-----------------------
+Release 02: ??-???-2001
+-----------------------
+
+1) Fixed some near-trivial bugs involving slightly incorrect implementation
+of analysis mode functions.
+
+2) Made the commands emited by epd2wb a little more sensible, so it more
+closely simulates Winboard when Winboard attempts to do similar stuff.
+
+3) Changed epd2wb so that it can handle non-SAN analysis moves much better.
+It should be able to handle most formats.  It can also deal with engines that
+output their analysis in various languages, but it can't cope with EPD files
+that have moves in other than English, since the standard for those files is
+English.  I also made it deal better with cases where an engine makes a move.
+
+4) Protover 1 was broken in engine release 01 since I assumed old Winboards
+sent the "xboard" command.  They don't.
+
+5) Changed epd2wb default wait time for older engines to 4 seconds, from 2
+seconds.
+
+6) The Loser's code wouldn't handle end of game reporting properly.
+
+7) Made some changes to the protocol layer.  I took a function out and added
+some other functions.  If anyone indicates to me that they are using the
+protocol layer, I will be more careful about doing this, but I don't think
+that anyone is using it yet.
+
+8) Epd2Wb was improperly handling the case where an engine wanted "setboard"
+but also wanted "black" and "white".  The engine would always play white.
+
+9) The engine will now resign if it is dead lost, and it will accept draws in
+some limited cases.  Resignation can be turned off via an INI file entry to a
+command-line switch.
+
+10) This release has better time management, and will extend time for fail-
+high and fail-low.
+
+11) Gerbil wasn't handling mates correctly in the hash table.  This was a
+trivial problem.
+
+12) Gerbil will now handle claims of 3x repetition correctly when castling
+flags and/or en-passant square are different in positions that are otherwise
+the same.
+
+13) Gerbil has rudimentary king-safety.
+
+14)	Draws due to insufficient material are claimed.  The cases are K vs K,
+K + minor vs K, and K+B vs K+B, with bishops of same color.
+
+15) Gerbil no longer reduces its priority when running.  If you want it to
+reduce its priority, you can pass the "-p" switch.
+
+16) Fixed a very bad bug where, for example, if someone made the 16th move in
+the legal move list, and there were exactly 15 legal moves possible after this
+move was made, the program wouldn't allow this move.
+
+
+-----------------------
+Release 01: 22-Jun-2001
+-----------------------
+
+1) Fixed a small "MakeMove" bug involving hash key computation when a pawn
+promotes.
+
+2) Fixed an extremely large and bad bug caused by piece promotion.  This fix
+was included in some versions of 00, since the bug was bad enough that I felt
+I needed to patch that release.
+
+3) Added pawn structure evaluation.  This is done via "pawns.c", which
+manages the pawn structure hash table and knows how to evaluate pawns.
+
+4) Gerbil will now output "++\n" after a line of analysis if it is failing
+high, "--\n" if it is failing low.  Epd2Wb will understand this.  This is
+described in section 12 ("Analyze Mode") of Tim Mann's Winboard engine spec.
+
+5) Added "Loser's" chess, which can be built with "nmake losers=1".  The stuff
+compiles into the "losers" subdirectory.  The Loser's code is in
+"src\losers", just one module, and there's also a few of #ifdef's here and
+there, which shouldn't be too distracting.  Thanks to "Kewlper" on ICC for
+some advice about Loser's chess.  The engine is not very strong since I don't
+know anything about Loser's chess.
+
+6) Fixed another serious bug discovered by Ralf Elvsen.  If the search found a
+new "best" move, the act of displaying the best line could cause the search to
+skip some other legal moves.  This bug also makes release 00 pretty suspect,
+but it's too late to change it now.
+
+7) Fixed an "epd2wb" bug as reported by Uli Tuerke.  The program doesn't leave
+"gerbil" as zombie engine, but it leaves some others as zombies.  I was
+forgetting to send the engine "quit" when the suite is over.
+
+8) Epd2Wb now has signal ^C event signal handling courtesy of Uli Tuerke.
+
+9) Hash table settings (pawn and transposition) will be dumped to
+winboard.debug if you call WinBoard with "/debug".
+
+10) Fixed a bug in winboard.c, reported by Massimiliano Orsi and others, which
+was causing an assert in line 204 of release 00.  The engine wouldn't start,
+because it couldn't process a longer time control passed from Winboard via
+the "level" command.
+
+11) Fixed a bug in "epd2wb" in "FFeatureTimeout", where I wasn't returning a
+value in an obvious case.  Reported by Brian K.
+
+12) "VPrAdvance" from the protocol layer is now returns boolean, which
+facilitates handling of illegal moves.
+
+13) Things will behave more sensibly if someone types "gerbil" at the command
+line and starts entering moves.  The engine is set to play at 2 second per
+move, and the interface layer always thinks it has two seconds left.
+
+14) Got rid of "BookDump" from the INI file and added command line switches.
+See the "readme" for details.
+
+15) "protocol.h" was causing problems on some systems, since the name was
+taken by system files, so this file is now named "gproto.h".  Dann Corbit
+pointed this out.
+
+16) I added support in the "winboard" files for protover 1.  Protover 1 is a
+huge bitch to implement, which is one reason that Tim Mann wrote protover 2.
+I can think of a few reasons why I want to add protover 1 support, and I think
+I did it without breaking protover 2.
+
+17) The EPD2WB executable can be downloaded by itself, with some useful
+documentation in "epd2wb.txt".
+
+18) EPD2WB can now handle protover 1, and listens to "feature" commands so it
+can behave in accordance with the wishes of the tested engine.
+
+19) The program will behave a little more sensibly if someone starts it up
+from the command line rather than messing with winboard.
+
+20) Lots of work in the interface layer on cleaning up arguments to commands.
+
+21) Added a "help" command in case someone runs it from the command line and
+gets confused by the lack of output.
+
+
+-----------------------
+Release 00: 15-Jun-2001
+-----------------------
+
+First released version.
+
+Contains "gerbil.exe", a winboard chess engine, and "epd2wb.exe", an EPD test
+suite harness for winboard engines, along will full source.
+
+The release includes a simple opening book containing under a thousand unique
+positions.
+
+The chess engine does not contain much of an evaluation function.  It
+understands material, it likes central occupation, it thinks that pushing
+pawns is good, and that's about it.  It's missing a lot of very obvious
+things, like pawn structure evaluation.
+
+The search is a simple null-move (R=2) search without anything fancy like PVS.
+The only extension is a check extension.
+
+The release version has played on ICC (on a 450 mhz processor) and seems to be
+rated 2150-2350 when playing 5 0 blitz against all (mostly human) challengers.
+
+--
+Copyright (C) Bruce Moreland, 2001.  All rights reserved.
+Please look in "gpl.txt" for information on the GNU General Public License.

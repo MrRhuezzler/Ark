@@ -1,0 +1,336 @@
+<html>
+
+<head>
+
+
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Min-Max Search</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<style>
+<!--
+.c-code      { font-family: Courier New; margin-left: 72; margin-top: 0; margin-bottom: 0 }
+-->
+</style>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="tree.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="alphabeta.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/minmax.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Min-Max Search"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<font face="Book Antiqua, Times New Roman, Times">
+<h1>An obvious place to start</h1>
+</font>
+
+<p>It would be possible to represent every conceivable chess game in a giant n-ary 
+tree, then perform a tree-search that finds the game that would be produced if 
+both sides were to play the best possible moves.&nbsp; An obvious algorithm to 
+use to do this is called <i>min-max search</i>.</p>
+<p>It is possible to use min-max search to solve (completely understand) simple 
+games like tic-tac-toe.&nbsp; The game-tree in tic-tac-toe is not very bushy and 
+it's not very deep, so the entire tree can be traversed, the game can be 
+completely understood, and a move can be made in any position that is guaranteed 
+to be the best move.</p>
+<p>It is possible to do this with chess in a theoretical sense, but it is not 
+possible to do on any computer that is likely to exist now or even in the far 
+future.&nbsp; Even so, it is still possible to use min-max search as the basis 
+of a program that plays chess.&nbsp; Rather than min-maxing the entire chess 
+tree, it is very possible to min-max the first few moves from a given start 
+position.&nbsp; Since the 
+positions at the leaves of the tree aren't necessarily searched all the way out 
+to mate or forced draw, a heuristic function, traditionally called &quot;Evaluate()&quot;, 
+is used to assign values to these positions.&nbsp; These values are guesses, 
+although chess programmers hope that they are educated guesses.</p>
+
+<h1>The Evaluate function, in the context of min-max</h1>
+
+<p>I am not going to go into a lot of detail about this function here.&nbsp; I 
+am going to define it, so I can refer to it in later sections.&nbsp; Evaluate is 
+a function that first returns an exact value for the position, if possible, and 
+an heuristic value if an exact value is not available.&nbsp; It can be defined 
+one of two ways:</p>
+
+<p>1) The function returns a very large positive value if Black is checkmated, a 
+very large negative value if White is checkmated, and a constant value, probably 
+zero or something near zero, if the game is drawn now (for instance if the side 
+to move is stalemated, or if there are bare kings).&nbsp; If the position 
+doesn't represent the end of the game, an heuristic value is returned.&nbsp; I 
+won't go into detail about how the heuristic value is determined, but suffice to 
+say that material balance is a primary consideration (the value will tend to be 
+large if White has much more material on the board), but other positional 
+considerations (pawn structure, king safety, strong pieces, etc.) are detected 
+and accounted for.&nbsp; The value returned by the heuristic function will 
+always be positive if White has won or is winning, negative if Black has won or 
+is winning, and around zero if the game is even or is a draw.</p>
+
+<p>2) This function works exactly the same as the other function, only the 
+function returns a positive value if the side to move <i>in the current node</i> 
+is &quot;ahead&quot;, and a negative value if the side currently to move is &quot;behind&quot;.&nbsp; 
+This is just a matter of how you perceive the function.</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<h1>How min-max works</h1>
+</font>
+
+<p>Min-max is a pair of functions that look almost the same, or one function 
+that has duplicated logic.&nbsp; There is a better function that does the same 
+thing with less code, but in response to an email criticism of this page, I will 
+first describe the &quot;pure&quot; (inelegant) min-max function.&nbsp; Here's the code:</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">int MinMax(int depth)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">{</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; if (SideToMove() == WHITE)&nbsp;&nbsp;&nbsp; 
+// White is the &quot;maximizing&quot; player.</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Max(depth);</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+// Black is the &quot;minimizing&quot; player.</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Min(depth);</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">}</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+&nbsp;</p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">int Max(int depth)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">{</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; int best = -INFINITY;</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">&nbsp;</p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; if (depth &lt;= 0)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; GenerateLegalMoves();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; while (MovesLeft()) {</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = Min(depth - 1);</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; best)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; best = val;<br>
+&nbsp;&nbsp;&nbsp; }</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; return best;</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">}</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+&nbsp;</p>
+</font>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">int Min(int depth)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">{</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; int best =  INFINITY;&nbsp; // &lt;-- Note 
+that this is different than in &quot;Max&quot;.</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">&nbsp;</p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; if (depth &lt;= 0)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; GenerateLegalMoves();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; while (MovesLeft()) {</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = Max(depth - 1);</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &lt; best)&nbsp; 
+// &lt;-- Note that this is different than in &quot;Max&quot;.</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; best = val;<br>
+&nbsp;&nbsp;&nbsp; }</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; return best;</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">}</font></p>
+</font>
+
+<p>The code is called something like this:</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<p class="c-code">val = MinMax(5);</p>
+</font>
+
+<p>This will return the value of the position, given 5-plies of look-ahead.</p>
+
+<p>The &quot;Evaluate&quot; function used in the above is the one described in my first 
+definition -- it always returns the value of the position from White's point of 
+view.</p>
+
+<p>I'll briefly describe how the function operates.&nbsp; Let's say that at the 
+root position (the position on the board now), it's White's turn to move.&nbsp; 
+The Max function is called, and all of White's legal moves are generated.&nbsp; 
+In each resulting position, the &quot;Min&quot; function is called.&nbsp; The &quot;Min&quot; 
+function scores the position and returns a value.&nbsp; Since it is White to 
+move, and White wants a more positive score if possible, the move with the 
+largest score is selected as best, and the value of this move is returned.</p>
+
+<p>The &quot;Min&quot; function works in reverse.&nbsp; The &quot;Min&quot; function is called when 
+it's Black's turn to move, and black wants a more negative score, so the move 
+with the most negative score is selected.</p>
+
+<p>These functions are dual recursive, meaning that they call each other until 
+the desired search depth is reached.&nbsp; When the functions &quot;bottom out&quot;, they 
+return the result of the &quot;Evaluate&quot; function.</p>
+
+<p>If you call &quot;MinMax&quot; with a depth value of 1, essentially all that happens is 
+that the &quot;Evaluate&quot; function is called after each legal move, and the position 
+that results in the &quot;best&quot; value for the side to move is selected.&nbsp; If 
+depth is greater than one, the other side gets a chance to respond, and chose 
+its best move.</p>
+
+<p>The above shouldn't be hard to understand, but it's a lot of code, and there 
+is a better way.</p>
+
+<h1>The nega-max function</h1>
+
+<p>Nega-max is just min-max with an optimization.&nbsp; The &quot;Evaluate&quot; function 
+returns scores via my second definition -- it returns scores that are positive 
+if the side to move at the current node is ahead, and everything else is also 
+viewed from the perspective of the side to move.&nbsp; When the value is 
+returned, it is negated, because it is now being viewed from the perspective of 
+the other side.&nbsp; Here is the code:</p>
+
+<font face="Book Antiqua, Times New Roman, Times">
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">int NegaMax(int depth)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">{</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; int best = -INFINITY;</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">&nbsp;</p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; if (depth &lt;= 0)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; GenerateLegalMoves();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; while (MovesLeft()) {</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -NegaMax(depth - 1); 
+// Note the minus sign here.</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; best)</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; best = val;<br>
+&nbsp;&nbsp;&nbsp; }</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; return best;</font></p>
+<p style="MARGIN-BOTTOM: 0px; MARGIN-LEFT: 72px; MARGIN-TOP: 0px" class="c-code">
+<font face="Courier">}</font></p>
+</font>
+
+<p>The function negates the return value in order to reflect the change and 
+perspective that results when the side to move is changed.&nbsp; So let's say 
+that you call this from the root with White to move.&nbsp; If there is no 
+remaining depth, &quot;Evaluate&quot; returns its value from the White perspective.&nbsp; 
+If there is depth remaining, the successor positions are generated, and the 
+function recurses once for each of those.&nbsp; Each of these calls evaluates 
+the position from the Black perspective, meaning that the score is larger if 
+Black is doing better.&nbsp; When the values are returned, they are negated, so 
+that they may be evaluated from White's point of view.</p>
+<p>This function traverses the same nodes as &quot;min-max&quot; in the same order, and 
+produces the same result.&nbsp; It's much less code, which means that there is 
+less opportunity to create a bug due to code replication, and the code is easier 
+to maintain.</p>
+
+<h1>Why nobody uses min-max</h1>
+
+<p>Min-max is very slow because&nbsp; you the number of nodes you have to look 
+at grows exponentially based upon the branching factor.&nbsp; Since chess has a 
+branching factor of about 35, you have to do 35 nodes in order to do a 1-ply 
+search, about 1000 nodes to do a 2-ply search, about 42,000 nodes to do a 3-ply 
+search, about a million and a&nbsp; half nodes in order to do a 4-ply search, 
+and so on.&nbsp; The numbers get very large very quickly.</p>
+
+<p>There is a means of reducing the effective branching factor, in order that 
+more depth can be achieved in less time, without getting a different result.&nbsp; 
+The algorithm is called <a href="alphabeta.htm">alpha-beta search</a>, and it's 
+essential basis of chess programming.&nbsp; It is a substantial optimization of 
+min-max.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

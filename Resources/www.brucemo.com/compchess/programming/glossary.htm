@@ -1,0 +1,106 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Glossary</title>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="time.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/glossary.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Glossary"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h2><!--mstheme--><font color="#FFFF99"><a name="book"></a>Book<!--mstheme--></font></h2>
+<p>When humans play chess, they don't think about their first few moves, because 
+they have figured them out in advance.&nbsp; A great deal of effort has been 
+expended by people who write books about the opening moves of chess, and people 
+read these books, memorize sequences, and hopefully understand why these 
+sequences are good or bad.</p>
+<p>It is not necessary that a computer chess program generate its first moves 
+via the search process.&nbsp; In almost every case that I can think of, the 
+programmer has built an &quot;opening book&quot;.&nbsp; At the start of the game, the 
+program looks moves up in this book and simply makes them without thinking.</p>
+<h2><!--mstheme--><font color="#FFFF99"><a name="fail-low"></a>Fail Low, <a name="fail-high"></a>Fail High<!--mstheme--></font></h2>
+<p>An alpha-beta search is guided by two bounds, which are called alpha and 
+beta.&nbsp; Alpha is always less than beta.&nbsp; Each <a href="#successor">
+successor</a> position is searched.&nbsp; If a successor's value is greater than 
+or equal to beta, the search will stop and return beta at that point.&nbsp; This 
+is called a &quot;fail high&quot;.&nbsp; If all of the successors are searched, and none 
+of them returns a score in excess of alpha, the search will return alpha.&nbsp; 
+This is called a fail low.</p>
+<p>A fail-high indicates that the search found something that was &quot;too good&quot;.&nbsp; 
+What this means is that the opponent has some way, already found by the search, 
+of avoiding this position, so you have to assume that they'll do this.&nbsp; If 
+they can avoid this position, there is no longer any need to search successors, 
+since this position won't happen.</p>
+<p>A fail-low indicates that this position was not good enough for us.&nbsp; We 
+will not reach this position, because we have some other means of reaching a 
+position that is better.&nbsp; We will not make the move that allowed the 
+opponent to put us in this position.</p>
+<p>You can also talk about failing high and failing low from the root position, 
+if you use an <a href="aspiration.htm">aspiration window</a>.</p>
+<h2><!--mstheme--><font color="#FFFF99"><a name="successor"></a>Successor position<!--mstheme--></font></h2>
+<p>A successor position is a position that can be reached from the current 
+position by a legal move.&nbsp; Meaning, that if you set the pieces up in order 
+to play a game of chess, if you are playing white, your job is to choose amongst 
+various successor positions, by making a legal move.&nbsp; If you play 1. e4, 
+you have achieved this, and the new position is a successor of the start 
+position.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+
+
+</html>

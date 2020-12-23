@@ -1,0 +1,43 @@
+INSTALLATION INSTRUCTIONS
+
+Bruce Moreland (brucemo@seanet.com)
+16-Jun-2001
+
+Download the ZIP file to an appropriate directory, such as "c:\gerbil" or
+"c:\Program Files\Gerbil", or whatever you wish.
+
+Unzip the file.  Please note that the directory structure is not flat.  If you
+use the same incredibly ancient version of pkunzip that I do, the syntax is:
+
+    pkunzip -o -d <zipfile>.zip
+
+You should get source files, executables, everything.  Look in the text files
+for further information, particularly README.TXT.
+
+Various licensing restrictions are covered in GPL.TXT and TOURNEY.TXT.
+
+Release notes are in RELEASE.TXT.
+
+You can't just run the executable by typing "gerbil" and expecting to play
+chess.  In order to use the program, you need to configure it as a Winboard
+engine.
+
+If you don't have Winboard, get it from Tim Mann at:
+
+    http://www.tim-mann.org/xboard.html
+
+Once you have Winboard installed, the simplest way to get going is to copy
+"gerbil.exe" and "gerbil.opn" into the directory with the Winboard executable,
+and type:
+
+    winboard /cp /fcp gerbil.exe
+
+If you start making moves, it should respond.
+
+If you want to hook up to ICC, the syntax is:
+
+    winboard /cp /zp /fcp gerbil.exe /ics /icshost chessclub.com /icshelper timestamp.exe
+
+--
+Copyright (C) Bruce Moreland, 2001.  All rights reserved.
+Please look in "gpl.txt" for information on the GNU General Public License.

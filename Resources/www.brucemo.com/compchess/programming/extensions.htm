@@ -1,0 +1,170 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Search Extensions</title>
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="nullmove.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="instability.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/extensions.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Search Extensions"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>Some positions are interesting and you want to search all of the successor 
+positions more deeply.</p>
+<p>It's interesting to try to figure out why you might want to do this.&nbsp; 
+There seem to be some contradictory reasons: </p>
+<p>1) Win-seeking extension:&nbsp; If I stop searching now I'll fail low, but I 
+think there might be something good here if I look a little further.</p>
+<p>2) Loss-seeking extension: If I stop searching now I'll fail high, but I 
+think I'm in trouble.</p>
+<p>3) Neutral extension: This is a forcing sequence, and if I stop searching now 
+I won't know how it ends.</p>
+<p>In these cases, you may want to search more deeply, so you can try to resolve 
+the situation more correctly.&nbsp; You either find out that you have a win, you 
+find out that you are hosed, or you avoid making a mistake either way.</p>
+<p>The goal is more accuracy.&nbsp; The risk is that you'll search even more 
+garbage than usual, so that gains are drowned in extra nodes.&nbsp; So the best 
+possible case is that you get the extra accuracy while <i>constraining</i> the 
+extension so it doesn't make the search tree enormous.</p>
+<p>How extensions traditionally work is that rather than decrementing the depth 
+under a successor node, you use the parent's depth.</p>
+<p>So if this node is to be searched to depth 3, you will typically search all 
+successors to depth 2.&nbsp; The ones you want to extend you'll search to depth 
+3.</p>
+<p>It is dangerous to extend like this, because obviously if you extend 
+everything, the search will never terminate.&nbsp; Even if the search 
+terminates, you still run the risk that you'll search a lot of garbage.</p>
+<p>Even more dangerous is to <i>increment</i> the depth under the successor 
+node, so for instance in my example above you might search a successor to depth 
+4.&nbsp; It's possible to do this, but in practice it is extremely dangerous and 
+everyone I've spoken to recoils in horror at the thought of doing this.</p>
+<p>Another alternative is to search fractional plies, which allows you to use 
+fractional extensions.&nbsp; I believe that a lot of good programs do this.&nbsp; 
+You can be more liberal about extending, but you know that eventually the 
+program will run out of depth and the search will terminate.</p>
+<p>I'll now describe some obvious extension ideas.&nbsp; I'm not going to 
+provide a lot of details of experimental results, since that is for every 
+program to mess with themselves.&nbsp; This article should serve as a source of 
+ideas, rather than implementation methods.</p>
+<h1><a name="check"></a>Check extension</h1>
+<p>The idea here is that if you check, the opponent probably has very few 
+replies, so extend all of them.&nbsp; It is easy to see this as an example of a 
+win-seeking extension, since checking is related to checkmate.&nbsp; However, 
+chess programs are great spite-checkers when they are losing, so it's important 
+to know if that's what is going on.&nbsp; So this is more of a neutral 
+extension.</p>
+<p>My guess is that this is the oldest extension in computer chess.&nbsp; It 
+seems to be a good idea.&nbsp; I've never figured out a way to constrain it, but 
+I have heard that others have done this with success.</p>
+<h1><a name="single"></a>Single-response extension</h1>
+<p>The idea here is that if you are in check, and you have one way out of check, 
+you are in big trouble, so you should extend that one way out of check.</p>
+<p>This is definitely a loss-seeking extension.</p>
+<p>It is also definitely an extension that needs to be constrained, because it 
+is possible in some cases to create a sequence of check + single response that 
+goes on essentially forever.&nbsp; You should not allow this extension 
+unconditionally.&nbsp; You either need a fractional extension system or some 
+other means of making sure that many of these are not done in a row.</p>
+<p>This extension has been used by commercial programs, and has been the focus 
+of some advertisements.&nbsp; There were ads in the 1980's for chess programs 
+that could find mate in 15 in a second or two, and when I looked at the 
+positions, they all involved a series of checks with one possible response.</p>
+<p>This extension will dramatically improve results on checkmate test suites.&nbsp; 
+Whether or not it has an effect on real games is open to debate, since there is 
+some tree-size cost in positions where neither side is being mated.</p>
+<h1><a name="recap"></a>Recapture extension</h1>
+<p>The idea here is that if I play RxR, you have to take my rook.&nbsp; RxR 
+isn't something that's apt to cause a cutoff, it's just a trade that I start, 
+and you have to finish, before I go on to other things.</p>
+<p>What this amounts to is a forcing sequence that I can initiate in order to 
+eat up some depth.&nbsp; This is most likely a case where I am trying to avoid 
+getting beaten.</p>
+<p>So the extension is on the recapture.&nbsp; An obvious way to implement this 
+is to make the recapture a free ply.</p>
+<p>There are problems where a series of forcing captures leads to a winning 
+situation as well.</p>
+<p>Recapture extension is another extension that seems to work well in practice, 
+without a lot of need to constrain it.&nbsp; It is not a very tricky extension.</p>
+<h1><a name="singular"></a>Singular extension</h1>
+<p>This extension is the search heuristic centerpiece of Deep Thought, the 
+strongest computer chess player of the 1980's, and precursor to Deep Blue.</p>
+<p>The idea is that if one move is significantly better than all of the other 
+moves (a <i>singular</i> move), it should be extended.</p>
+<p>This can be interpreted as a more general case of the recapture and single 
+response extensions.&nbsp; It encompasses these, but also can be used in cases 
+where the singular move is not a recapture and where the side making the move 
+isn't in check.</p>
+<p>I don't know why it worked in DT, but it seems to me that this is a 
+loss-seeking extension.</p>
+<p>I have never seen anyone claim in an article to be able to get good results 
+with this extension, so for academic purposes I think this is unproven.&nbsp; 
+I've played with it myself and had some success in getting it to solve tactical 
+problems faster.</p>
+<p>The down side is that you get less general-case depth when you use this, 
+because you have to do extra searches to test for singularity.</p>
+<h1><a name="mate"></a>Mate-Threat extension</h1>
+<p>This is just a matter of extending responses to a mate threat.&nbsp; It may 
+be difficult to detect that a mate has been threatened, but there are problems 
+where one side is down materially and repeatedly threatens mate.&nbsp; It seems 
+obvious that this is a good win-seeking extension.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+12/27/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+
+
+</html>

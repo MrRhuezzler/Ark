@@ -1,0 +1,173 @@
+<html>
+
+<head>
+
+
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Zobrist Keys</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="contempt.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="hashing.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/zobrist.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Zobrist Keys"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>A  means of enabling position comparison</h1>
+<p>A chess position is comprised of the pieces on the board, side to move, 
+castling legality, and en-passant capture legality.</p>
+<p>When writing a chess program, it is necessary to be able to compare two 
+positions in order to see if they are the same.&nbsp; If you had to compare the 
+position of each piece, it wouldn't take long to do, but in practice you will 
+have to do this thousands of times per second, so if you did it this way it 
+could become a performance bottleneck.&nbsp; Also, the number of positions that 
+you will save for future comparison is extremely large, so storing the location 
+of each piece, etc., ends up taking too much space.</p>
+<p>A solution to this problem involves creation of a signature value, typically 
+64-bits.&nbsp; Since 64 bits is not enough to enumerate every chess position, 
+there will exist the possibility of a signature collision, but in practice this 
+is rare enough that it can be ignored, as long as you make sure you don't 
+actually crash if you get a collision.</p>
+<p>Whether or not 32-bits is enough is open to some debate, but conventional 
+wisdom says &quot;no&quot;.</p>
+<p>A popular way of implementing signatures involves Zobrist keys.</p>
+<h1>Implementation</h1>
+<p>You start by making a multi-dimensional array of 64-bit elements, each of 
+which contains a random number.&nbsp; In C, the &quot;rand()&quot; function returns a 
+15-bit value (0..32767), so in order to get a 64-bit random number you will 
+probably have to do a little work.&nbsp; Actually, I'll do it for you.&nbsp; 
+Here is a 64-bit random number function:</p>
+<p class="c-code">
+U64 rand64(void)</p>
+<p class="c-code">
+{</p>
+<p class="c-code">
+&nbsp;&nbsp;&nbsp; return rand() ^ ((U64)rand() &lt;&lt; 15) ^ 
+((U64)rand() &lt;&lt; 30) ^</p>
+<p class="c-code">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((U64)rand() &lt;&lt; 
+45) ^ ((U64)rand() &lt;&lt; 60);</p>
+<p class="c-code">
+}</p>
+<p>This function works by filling up a whole &quot;U64&quot; element (you define this 
+element yourself, depending upon what compiler you use -- try &quot;long long&quot; or 
+&quot;__int64&quot;) with hunks of gibberish returned by &quot;rand()&quot;.</p>
+<p>Anyway, your table has three dimensions -- type of piece, color of piece, and 
+location of piece:</p>
+<p class="c-code">U64 
+zobrist[pcMAX][coMAX][sqMAX];</p>
+<p>You start by filling this up with random numbers when the program boots.&nbsp; 
+The numbers need to be pretty random.&nbsp; I've read Usenet posts and so on 
+where people claim that &quot;rand()&quot; is not random enough for this, but &quot;rand()&quot; is 
+what I've always used and I've never had a problem.&nbsp; If you want to make 
+something more random, more power to you, but make sure that you don't use 
+anything less random than &quot;rand()&quot;.</p>
+<p>To create a zobrist key for a position, you set your key to zero, then you go 
+find every piece on the board, and XOR (via the &quot;^&quot; operator) &quot;zobrist[pc][co][sq]&quot; 
+into your key.</p>
+<p>If the position is white to move, you leave it alone, but if it's black to 
+move, you XOR a 64-bit constant random number into the key.</p>
+<h1>Why Zobrist keys are especially nice</h1>
+<p>This Zobrist key technique creates keys that aren't related to the position 
+being keyed.&nbsp; If a single piece or pawn is moved, you get a key that's 
+completely different, so these keys don't tend to clump up or collide very much.&nbsp; 
+This is good if you are trying to use them as hash keys.</p>
+<p>Another nice thing is that you can manage these keys incrementally.&nbsp; If, 
+for example, you have a white pawn on e5, the key has had &quot;zobrist[PAWN][WHITE][E5]&quot; 
+XOR'd into it.&nbsp; If you XOR this value into the key again, due to the way 
+that XOR works, the pawn is deleted from the key.</p>
+<p>What this means is that if you have a key for the current position, and want 
+to move a white pawn from e5 to e6, you XOR in the &quot;white pawn on e5&quot; key, which 
+removes the pawn from e5, and XOR in the &quot;white pawn on e6&quot; key, which puts a 
+white pawn on e6.&nbsp; You are guaranteed to get the same key that you'd get if 
+you started over and XOR'd all of the keys for all of the pieces together.</p>
+<p>If you want to switch side to move, you XOR the &quot;change side to move&quot; key in.&nbsp; 
+You can also manage castling and en-passant values the same way.</p>
+<p>The utility of this is that you can create a zobrist key at the root of the 
+search, and keep it current throughout the course of the search by updating it 
+in &quot;MakeMove()&quot;.</p>
+<h1>Some uses for these keys</h1>
+<p>These Zobrist keys are often used as hash keys.&nbsp; Hash keys have several 
+uses in chess programs:</p>
+<ol>
+  <li>You can use them to implement a transposition table.&nbsp; This is a large 
+  hash table that allows you to keep track of positions that you've seen during 
+  the search.&nbsp; This will let you save work in some cases.&nbsp; If you are 
+  going to search a position to depth 9, you can look it up in the transposition 
+  table, and if you've already searched it to depth 9, you might be able to 
+  avoid a long search.&nbsp; A less obvious use of the main transposition table 
+  involves improving your move ordering.</li>
+  <li>You can use them to implement pawn structure hashing.&nbsp; You can keep a 
+  key that is created only from the pawns that are on the board.&nbsp; You can 
+  do sophisticated analysis of pawn structures, and store the result in a hash 
+  table for later retrieval.&nbsp; In practice you end up with relatively few 
+  pawn structures that arise from a given start position, so the hit rate on 
+  this hash table is extremely high, so in essence you get to do all of the pawn 
+  structure evaluation you want for free.</li>
+  <li>You can make a smaller hash table, which you can use to detect repetitions 
+  in the current line, so you can detect perpetual check and other repetition 
+  draw cases.</li>
+  <li>You can use these to create an opening book that handles transpositions.</li>
+</ol>
+<p>&nbsp;</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+11/04/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

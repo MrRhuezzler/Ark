@@ -1,0 +1,175 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Principal Variation Search</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="alphabeta.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="quiescent.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/pvs.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="Principal Variation Search"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>An enhancement to alpha-beta</h1>
+<p>Principal Variation Search (PVS) is a means of getting a small performance 
+improvement out of the <a href="alphabeta.htm">alpha-beta</a> algorithm.</p>
+<p>Any node in an alpha-beta search belongs to one of three types:</p>
+<ol>
+  <li>Alpha node.&nbsp; Every move you search will have a value less than or 
+  equal to alpha, meaning that none of the moves in here will be any good, 
+  probably because the starting position is bad for the side to move.</li>
+  <li>Beta node.&nbsp; At least one of the moves will return a score greater 
+  than or equal to beta.</li>
+  <li>Principal variation (PV) node.&nbsp; One or more of the moves will return 
+  a score greater than alpha (a PV move), but none will return a score greater 
+  than or equal to beta.</li>
+</ol>
+<p>Sometimes you can figure out what kind of node you are dealing with early on.&nbsp; 
+If the first move you search fails high (returns a score greater than or equal 
+to beta), you've clearly got a beta node.&nbsp; If the first move fails low 
+(returns a score less than or equal to alpha), assuming that your move ordering 
+is pretty good, you probably have an alpha node.&nbsp; If the first move returns 
+a score between alpha and beta, you probably have a PV node.</p>
+<p>Of course, you could be wrong in two of the cases.&nbsp; Once you fail high, 
+you return beta, so you can't make a mistake about that, but if the first move 
+fails low or is a PV move, it's still possible that a later move will come back 
+with a higher value.</p>
+<p>Principal Variation Search makes the assumption that if you find a PV move 
+when you are searching a node, you have a PV node.&nbsp; It assumes that your 
+move ordering will be good enough that you won't find a better PV move, or a 
+fail-high move (which would cause this to become a beta node), amongst the other 
+moves.</p>
+<p>Once you've found a move with a score that is between alpha and beta, the 
+rest of the moves are searched with the goal of proving that they are all bad.&nbsp; 
+It's possible to do this a bit faster than a search that worries that one of the 
+remaining moves might be good.</p>
+<p>If the algorithm finds out that it was wrong, and that one of the subsequent 
+moves was better than the first PV move, it has to search again, in the normal 
+alpha-beta manner.&nbsp; This happens sometimes, and it's a waste of time, but 
+generally not often enough to counteract the savings gained from doing the &quot;bad 
+move proof&quot; search referred to earlier.</p>
+<p>Here is the algorithm, overlaid on alpha-beta, with changes highlighted:</p>
+<p class="c-code">int AlphaBeta(int depth, int alpha, int beta)</p>
+<p class="c-code">{</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp; BOOL fFoundPv = 
+FALSE;</span></p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; if (depth == 0)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return Evaluate();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; GenerateLegalMoves();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; while (MovesLeft()) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+if (fFoundPv) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -AlphaBeta(depth 
+- 1, -alpha - 1, -alpha);</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+if ((val &gt; alpha) &amp;&amp; (val &lt; beta)) // Check for failure.</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+val = -AlphaBeta(depth - 1, -beta, -alpha);</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+} else</span></p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+val = -AlphaBeta(depth - 1, -beta, -alpha);</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt;= beta)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return beta;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+alpha = val;</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+fFoundPv = TRUE;</span></p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; return alpha;</p>
+<p class="c-code">}</p>
+<p>The algorithm is all about the highlighted if-block in the middle of the 
+function.&nbsp; If no PV move has been found, &quot;AlphaBeta()&quot; is recursed 
+normally.&nbsp; If one has been found, everything changes.&nbsp; Rather than 
+searching with a normal (alpha, beta) window, we search with (alpha, alpha + 1).&nbsp; 
+The premise is that all of the searches are going to come back with a score less 
+than or equal to alpha, and if this is going to happen, the elimination of the 
+top end of the window results in more cutoffs.&nbsp; Of course, if the premise 
+is wrong, the score comes back at alpha + 1 or higher, and the search&nbsp; must 
+be re-done with the wider window.</p>
+<p>The performance improvement for PVS has been claimed to be 10%.&nbsp; I 
+haven't tried to figure out exactly how much improvement I get if I use PVS in 
+my program, but I do get some improvement, so I use it.</p>
+<h1>Search instability issues</h1>
+<p>If you search with an (alpha, alpha + 1) window, and the score comes back 
+above the window (but doesn't exceed beta), you have to re-search.&nbsp; You'd 
+think the re-search must come back with a score between alpha and beta, but this 
+is not necessarily so.&nbsp; It might not be so because of
+<a href="instability.htm">search instability</a>, which is something that I will 
+discuss at various points.</p>
+<p>The routine as written above defends against this situation, and handles it 
+properly if it happens.&nbsp; If you are going to write this routine and change 
+things around, be very careful that you don't assume that your search will 
+always be stable.&nbsp; You have to not crash and burn if you get a value back 
+that you supposedly just proved you can't get.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+11/04/02 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>

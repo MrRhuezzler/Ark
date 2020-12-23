@@ -1,0 +1,300 @@
+<html>
+
+<head>
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>The Main Transposition Table</title>
+<link rel="stylesheet" type="text/css" href="../../styles.css">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FFCC00" vlink="#CCCC7F" alink="#FF3300"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p align="left">
+<script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back.gif"); MSFPnav1h=MSFPpreload("../../_derived/back_cmp_zero-plus-one110_back_a.gif"); }
+// --></script><a href="zobrist.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../../_derived/back_cmp_zero-plus-one110_back.gif" width="100" height="20" border="0" alt="Back" align="middle" name="MSFPnav1"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up.gif"); MSFPnav2h=MSFPpreload("../../_derived/up_cmp_zero-plus-one110_up_a.gif"); }
+// --></script><a href="index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../../_derived/up_cmp_zero-plus-one110_up.gif" width="100" height="20" border="0" alt="Up" align="middle" name="MSFPnav2"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next.gif"); MSFPnav3h=MSFPpreload("../../_derived/next_cmp_zero-plus-one110_next_a.gif"); }
+// --></script><a href="repetition.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../../_derived/next_cmp_zero-plus-one110_next.gif" width="100" height="20" border="0" alt="Next" align="middle" name="MSFPnav3"></a></p>
+
+<p align="left"><font size="6"><strong>
+<img src="_derived/hashing.htm_cmp_zero-plus-one110_bnr.gif" width="575" height="60" border="0" alt="The Main Transposition Table"></strong></font></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<p>
+
+</p>
+
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+<h1>A multi-purpose data structure</h1>
+<p>A chess tree can be viewed as a graph, where transpositions can lead back 
+into sub-trees that may have already been examined.&nbsp; A transposition hash 
+table can be used to detect these cases in order to avoid duplicating work.&nbsp; 
+If the position after 1. e4 d6 2. d4 has already been searched, it makes no 
+sense to search the position after 1. d4 d6 2. e4.</p>
+<p>It's possible that this line of reasoning inspired early computer chess 
+programmers, and this is in fact a minor reason to implement a transposition 
+hash table.&nbsp; And in some positions, such as endgame king+pawn endings with 
+locked pawns, the number of transpositions is so high that detecting 
+transpositions is such a fantastic help that huge search depths can be reached 
+in a matter of seconds.</p>
+<p>Eliminating duplicate work is a fine feature of a transposition table, but in 
+normal middlegame positions, another use of the table is more important.&nbsp; 
+One of the fields in each hash element is the best move found in the position.&nbsp; 
+As I explained in my explanation of <a href="iterative.htm">iterative 
+deepening</a>, searching good moves first makes the search much more efficient.&nbsp; 
+So if you find that there is a &quot;best&quot; move in your hash element, and you search 
+it first, you will often improve your move ordering, which will improve your 
+branching factor, which will result in a deeper search in less time.</p>
+<h1>Implementation</h1>
+<p>The main transposition table is an array of hash elements.&nbsp; Each hash 
+element looks something like this:</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">#define&nbsp;&nbsp;&nbsp; hashfEXACT&nbsp;&nbsp; 0</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">#define&nbsp;&nbsp;&nbsp; hashfALPHA&nbsp;&nbsp; 1</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">#define&nbsp;&nbsp;&nbsp; hashfBETA&nbsp;&nbsp;&nbsp; 2</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">&nbsp;</p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">typedef struct tagHASHE {</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; U64 key;</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; int depth;</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; int flags;</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; int value;</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">&nbsp;&nbsp;&nbsp; MOVE best;</font></p>
+<p style="margin-left: 72; margin-top: 0; margin-bottom: 0" class="c-code">
+<font face="Courier">}&nbsp;&nbsp; HASHE;</font></p>
+<p>The hash array is indexed via a <a href="zobrist.htm">Zobrist key</a>.&nbsp; 
+You take the key for the position, modulo it by the number of elements in your 
+table, and that's the hash element that corresponds to this position.&nbsp; 
+Since many positions are apt to map to the same element in the hash table, the 
+table elements contain a verification value, which can be used to make sure that 
+the element in the table is the one that you are trying to find.&nbsp; An 
+obvious verification value is the full 64-bit key, so that is the first field in 
+the example above.</p>
+<p>When you get a result from a search, and you want to store an element in the 
+table, it is important to record how deep the search went, if you plan to use 
+the hash table to avoid doing redundant work.&nbsp; If you searched this 
+position with a 3-ply search, and you come along later planning to do a 10-ply 
+search, you can't assume that the information in this hash element is accurate.&nbsp; 
+So the search depth for this sub-tree is also recorded.</p>
+<p>In an alpha-beta search, rarely do you get an exact value when you search a 
+node.&nbsp; &quot;Alpha&quot; and &quot;beta&quot; exist to help you prune out useless sub-trees, 
+but the minor disadvantage to using alpha-beta is that you don't often know 
+exactly how bad or good a node is, you just know that it is bad enough or good 
+enough that you don't need to waste any more time on it.</p>
+<p>Of course, this raises the question as to what value you store in the hash 
+element, and what you can do with it when you retrieve it.&nbsp; The answer is 
+to store a value, and a flag that indicates what the value means.&nbsp; In my 
+example above, if you store, let's say, a 16 in the value field, and &quot;hashfEXACT&quot; 
+in the flags field, this means that the value of the node was exactly 16.&nbsp; 
+If you store &quot;hashfALPHA&quot; in the flags field, the value of the node was at most 
+16.&nbsp; If you store &quot;hashfBETA&quot;, the value is at least 16.</p>
+<p>It is pretty easy to figure out which value and flags to store given any 
+particular circumstance you might encounter when searching, but it is important 
+to avoid bugs.&nbsp; Hashing bugs are easy to make, and once you make one they 
+are very difficult to track down.</p>
+<p>The final field in my hash element is the &quot;best&quot; move encountered last time I 
+searched this position.&nbsp; Sometimes I don't get a best move, like if 
+everything failed low (returned a score &lt;= alpha), but other times there is a 
+definite best move, like when something fails high (returns a score &gt;= beta).</p>
+<p>If&nbsp; a best move is found, it will be searched first.</p>
+<p>Some sample code, overlaid onto an alpha-beta function, with changes 
+highlighted:</p>
+<p class="c-code">int AlphaBeta(int depth, int 
+alpha, int beta)<br>
+{</p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp; int hashf = hashfALPHA;</span></p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp; if ((val = 
+ProbeHash(depth, alpha, beta)) != valUNKNOWN)</span></p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return val;<br>
+</span>&nbsp;&nbsp;&nbsp; if (depth == 0) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+val = Evaluate();</p>
+<p class="c-code">
+<span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+RecordHash(depth, val, hashfEXACT);</span></p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+}<br>
+&nbsp;&nbsp;&nbsp; GenerateLegalMoves();<br>
+&nbsp;&nbsp;&nbsp; while (MovesLeft()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MakeNextMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; val = -AlphaBeta(depth - 1, -beta, 
+-alpha);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UnmakeMove();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt;= beta) {</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+RecordHash(depth, beta, hashfBETA);<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 
+beta;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (val &gt; alpha) {</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+hashf = hashfEXACT;<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alpha = val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+}<br>
+&nbsp;&nbsp;&nbsp; }</p>
+<p class="c-code"><span class="highlit-code">&nbsp;&nbsp;&nbsp; RecordHash(depth, alpha, hashf);<br>
+</span>&nbsp;&nbsp;&nbsp; return alpha;<br>
+}</p>
+<p style="margin-left: 72; margin-top:0; margin-bottom:0">&nbsp;</p>
+<p>Here is the source for the two new functions::</p>
+<p class="c-code">int ProbeHash(int depth, int alpha, int beta)</p>
+<p class="c-code">{</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+HASHE * phashe = &amp;hash_table[ZobristKey() % TableSize()];</p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+if (phashe-&gt;key == ZobristKey()) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+if (phashe-&gt;depth &gt;= depth) {</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+if (phashe-&gt;flags == hashfEXACT)</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return phashe-&gt;val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+if ((phashe-&gt;flags == hashfALPHA) &amp;&amp;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+(phashe-&gt;val &lt;= alpha))</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return alpha;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((phashe-&gt;flags 
+== hashfBETA) &amp;&amp;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+(phashe-&gt;val &gt;= beta))</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+return beta;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+}</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+RememberBestMove();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+}</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+return valUNKNOWN;</p>
+<p class="c-code">}</p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">void RecordHash(int depth, int val, int hashf)</p>
+<p class="c-code">{</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+HASHE * phashe = &amp;hash_table[ZobristKey() % TableSize()];</p>
+<p class="c-code">&nbsp;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+phashe-&gt;key = ZobristKey();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+phashe-&gt;best = BestMove();</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+phashe-&gt;val = val;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+phashe-&gt;hashf = hashf;</p>
+<p class="c-code">&nbsp;&nbsp;&nbsp; 
+phashe-&gt;depth = depth;<br>
+}</p>
+<p>As you can see, this isn't exactly rocket science, but it's possible to have 
+bugs, and there are some nuances I haven't discussed.&nbsp; If you do have bugs, 
+they will be really, really bad bugs.</p>
+<h1><a name="replacement"></a>Replacement schemes</h1>
+<p>The most major nuance involves when to over-write a hash element.&nbsp; In 
+the example above, I use the scheme &quot;always replace&quot;, which simply over-writes 
+anything that was already there.&nbsp; This may not be the best scheme, and in 
+fact there has been a lot of work trying to figure out what the best scheme is.</p>
+<p>Another scheme is &quot;replace if same depth or deeper&quot;.&nbsp; This leaves a 
+currently existing node alone unless the depth attached the new one is greater 
+than or equal to the depth of the one in the table.</p>
+<p>There is lots of room for experimentation here.&nbsp; In 1994 I asked a 
+question about replacement scheme in the Usenet group rec.games.chess (now 
+rec.games.chess.computer), and I received an answer from Ken Thompson.</p>
+<p>His answer was to use two tables.&nbsp; One uses the &quot;replace always&quot; scheme, 
+and the other uses &quot;replace if same depth or deeper&quot;.&nbsp; When you probe, you 
+probe both tables, and if one of them lets you cut off, you do it.&nbsp; If 
+neither of them let you cut off, you might at least get a best move from one of 
+them, and in fact you might get two different ones, both of which should be 
+tried first (or second).</p>
+<p>When recording, you simply use the appropriate replacement scheme.</p>
+<p>If you use the &quot;replace if deeper or same depth&quot; scheme, your table might 
+eventually fill up with outdated deep nodes.&nbsp; The solution to this is 
+either to clear the table each time you move, or add a &quot;sequence&quot; field to your 
+element, so the replacement scheme becomes, &quot;replace if same depth, deeper, or 
+the element pertains to an ancient search&quot;.</p>
+<p>I use Thompson's scheme today in <a href="../ferret/index.htm">Ferret</a>, and it 
+works fine.&nbsp; <a href="../gerbil/index.htm">Gerbil</a> also uses this 
+scheme, if you want to see some real source code.</p>
+<h1><a name="instability"></a>The instability problem</h1>
+<p>Another problem that happens when you start using a transposition hash table, 
+if you allow the search to cut off based upon elements in the table, is that 
+your search suffers from <a href="instability.htm">instability</a>.</p>
+<p>You get instability for at least a couple of reasons:</p>
+<ol>
+  <li>You might be trying to do a 6-ply search here, but if you have results for 
+  a 10-ply search in your hash element, you might cut off based upon these.&nbsp; 
+  Later on you come back and the element has been over-written, so you get a 
+  different value back for this node.</li>
+  <li>The Zobrist key does not take into account the path taken to get to a 
+  node.&nbsp; Not every path is the same.&nbsp; It is possible that the score in 
+  a hash element might be based upon a path that would contain a repetition if 
+  encountered at some other point in the tree.&nbsp; A repetition might result 
+  in a draw score, or at least a different score.</li>
+</ol>
+<p>There is nothing that can be done about this, as far as I can tell.</p>
+
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="Arial, Arial, Helvetica">
+
+
+
+<h5><!--mstheme--><font color="#FF9900">&nbsp;<!--mstheme--></font></h5>
+
+
+
+<h5><!--mstheme--><font color="#FF9900">Send mail to <a href="mailto:brucemo@seanet.com">
+brucemo@seanet.com</a> with
+questions or comments about this web site.<br>
+
+
+Copyright © 2001 Bruce Moreland<br>
+
+
+Last modified: 
+01/24/03 <!--mstheme--></font></h5>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+
+<!-- SOME LINK HREF'S ON THIS PAGE HAVE BEEN REWRITTEN BY THE WAYBACK MACHINE
+OF THE INTERNET ARCHIVE IN ORDER TO PRESERVE THE TEMPORAL INTEGRITY OF THE SESSION. -->
+
+
+
+
+</html>
