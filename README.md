@@ -3,7 +3,7 @@
 Author           : [MrRhuezzler](https://github.com/MrRhuezzler)  
 Project Language : C  
 Project Year     : 2020  
-Status           : :white_check_mark: (Working) 
+Status           : :white_check_mark: (Completed) 
 
 Inspired by Bluefever !
 
