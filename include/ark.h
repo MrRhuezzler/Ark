@@ -6,13 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <io.h>
+#include <ctype.h>
 #include <fcntl.h>
-
 
 /* Local Header */
 #include "constants.h"
 #include "structures.h"
-
 
 /* --------------- MACROS --------------- */
 
@@ -21,17 +20,18 @@
 #ifndef DEBUG
 #define ASSERT(n)
 #else
-#define ASSERT(n) \
-if(!(n)){ \
-printf("%s - Failed ", #n);\
-printf("In File %s ", __FILE__);\
-printf("At Line %d\n", __LINE__);\
-exit(1);}
+#define ASSERT(n)                         \
+    if (!(n))                             \
+    {                                     \
+        printf("%s - Failed ", #n);       \
+        printf("In File %s ", __FILE__);  \
+        printf("At Line %d\n", __LINE__); \
+        exit(1);                          \
+    }
 #endif
 
-
 // Macro to get from FILE, RANK to SQUARE INDEX
-#define FR2SQ(f, r) (A1 + (f)) + ((r) * 10)
+#define FR2SQ(f, r) (A1 + (f)) + ((r)*10)
 
 // Macro for popBit
 #define POP(bb) popBit(bb)
@@ -54,18 +54,17 @@ exit(1);}
 #define IsKi(p) IsKing[p]
 
 // Random Key Generator (ULONGLONG)
-#define RAND_64 (   (U64)rand() |       \
-                    (U64)rand() << 15 | \
-                    (U64)rand() << 30 | \
-                    (U64)rand() << 45 | \
-                    (U64)rand() << 60   )
-
+#define RAND_64 ((U64)rand() |       \
+                 (U64)rand() << 15 | \
+                 (U64)rand() << 30 | \
+                 (U64)rand() << 45 | \
+                 (U64)rand() << 60)
 
 // Move preprocessors
 #define FROSQ(move) (move & 0x7F)
-#define TOSQ(move) ((move >> 7)  & 0x7F)
+#define TOSQ(move) ((move >> 7) & 0x7F)
 #define CAPTURED(move) ((move >> 14) & 0xF)
-#define PROMOTION(move) ((move >> 20)& 0xF)
+#define PROMOTION(move) ((move >> 20) & 0xF)
 
 // Flags
 #define MFLAGEP 0x40000
@@ -150,7 +149,7 @@ extern int parseFen(const char *fen, S_BOARD *board);
 extern void printBoard(const S_BOARD *board);
 extern void UpdateListsMaterial(S_BOARD *board);
 extern int CheckBoard(const S_BOARD *board);
-void printBoardOnly(const S_BOARD* board);
+void printBoardOnly(const S_BOARD *board);
 
 // attack.c
 extern int isSqAttacked(const int sq, const int side, const S_BOARD *board);
@@ -158,11 +157,11 @@ extern int isSqDoublePiece(const int gpiece, const int g_sq, const int sq, const
 
 // io.c
 extern void SqAt(const int side, const S_BOARD *board);
-extern char * PrSq(const int sq);
-extern char * PrMove(const int move);
+extern char *PrSq(const int sq);
+extern char *PrMove(const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
 extern int ParseInputMove(char *input, S_BOARD *board);
-extern char * HNPrMove(const int move, S_BOARD *board);
+extern char *HNPrMove(const int move, S_BOARD *board);
 
 // validate.c
 extern int SqOnBoard(const int sq);
@@ -175,12 +174,11 @@ extern int PieceValid(const int pce);
 extern void InitMvvLVA();
 extern int MoveExists(S_BOARD *board, const int move);
 extern void GenerateAllMoves(const S_BOARD *board, S_MOVELIST *list);
-extern void GenerateAllCaptures(const S_BOARD* board, S_MOVELIST* list);
+extern void GenerateAllCaptures(const S_BOARD *board, S_MOVELIST *list);
 
 // makemove.c
 extern int MakeMove(S_BOARD *board, const int move);
 extern void TakeMove(S_BOARD *board);
-
 
 // perft.c
 extern void perftTest(int depth, S_BOARD *board);
@@ -190,7 +188,7 @@ extern void SearchPosition(S_BOARD *board, S_SEARCHINFO *info);
 
 // misc.c
 extern U64 getMillis();
-extern void ReadInput(S_SEARCHINFO* info);
+extern void ReadInput(S_SEARCHINFO *info);
 
 // pvtable.c
 extern void InitPvTable(S_PVTABLE *table);
@@ -201,7 +199,6 @@ int GetPvLine(S_BOARD *board, int depth);
 
 // evaluate.c
 extern int EvalPosition(const S_BOARD *board);
-
 
 // uci.c
 extern void UCILoop();
